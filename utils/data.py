@@ -174,7 +174,7 @@ class ImagesDataset_v2(Dataset):
         bool_grid = batch_xyz_to_boolean_grid(xyz_np, self.setup_params)
 
         # target 2d image without noise
-        gtimg_name = os.path.join(self.root_dir,'noiseless','noiseless' + ID + '.mat')
+        gtimg_name = os.path.join(self.root_dir,'clean','I' + ID + '.mat')
         gtimg_mat = scipy.io.loadmat(gtimg_name)
         gtimg_np = np.float32(gtimg_mat['I0'])
         gtimg_tensor = torch.from_numpy(gtimg_np)
