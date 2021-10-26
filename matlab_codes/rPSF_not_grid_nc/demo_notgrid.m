@@ -163,7 +163,7 @@ end
 mean_recall=mean(recall);
 mean_precision=mean(precision);
 
-dlmwrite([histogram_save_dir,'result.csv'],{N_test,nSource,mean_recall,mean_precision},'delimiter',',','-append');
+dlmwrite([histogram_save_dir,'result.csv'],{N_test,nSource,mean_precision,mean_recall},'delimiter',',','-append');
 
 %% plot the 3D estimation (compare ground true with estimated solution)
 % [loc_x,loc_y,loc_z] = ind2sub(size(A),find(xIt>0)); 
