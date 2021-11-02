@@ -42,7 +42,7 @@ for nt = 1:50
     % remove boundary pts
 %     pred_tmp_after = pred_tmp(abs(pred_tmp(:,2))~=47.75,:);
 %     pred_tmp_after = pred_tmp_after(abs(pred_tmp_after(:,3))~=47.75,:);
-%     pred_tmp = pred_tmp(pred_tmp(:,4)~=-19.914,:);
+     pred_tmp = pred_tmp(pred_tmp(:,4)~=-19.914,:);
 
     % load ground truth 3d grid
     interest_reg = zeros(32,nSource); 
