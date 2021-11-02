@@ -2,7 +2,7 @@ set -x
 for pts in 5 10 15 20 25 30 35 40 45
 do
 python3 main.py      --gpu_number='2' \
-    --checkpoint_path='../trained_model/0908-nTrain9000-lr0.0005-Epoch300-batchSize8-D250-cnn_residual/checkpoint_best_loss' \
+    --checkpoint_path='../trained_model/1019-nTrain8999-lr0.0005-Epoch190-batchSize8-D250-cnn_residual/checkpoint_best_loss' \
             --training_data_path='../data_test/test'$pts \
             --result_path='../test_output/test'$pts \
             --model_use='cnn_residual'  \

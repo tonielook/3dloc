@@ -8,7 +8,7 @@ global   Np nSource L Nzones
 L = 4; Nzones = 7; 
 % nSource = 5;
 [Nx,Ny,Nz] = size(A); Np = Nx;
-N_test  = 50;
+N_test  = 100;
 interest_reg = zeros(32,nSource); 
 
 time = zeros(N_test,1); 
