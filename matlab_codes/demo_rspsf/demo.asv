@@ -6,7 +6,7 @@ global   Np nSource L Nzones
 L = 4; Nzones = 7; 
 % nSource = 5;
 [Nx,Ny,Nz] = size(A); Np = Nx;
-N_test  = 50;
+N_test  = 100;
 interest_reg = zeros(32,nSource); 
 time = zeros(N_test,1); recall = zeros(N_test,1); 
 precision = zeros(N_test,1); ab_error = time;
@@ -154,9 +154,9 @@ end
 
 mean_recall=mean(recall);
 mean_precision=mean(precision);
-mean_time=mean(time(nt));
+mean_time=mean(time);
 
-dlmwrite('../../../test_output/var/result.csv',{N_test,nSource,mean_precision,mean_recall},'delimiter',',','-append');
+dlmwrite('../../../test_output/var/result.csv',{N_test,nSource,mean_precision,mean_recall,mean_time},'delimiter',',','-append');
 
 
 
