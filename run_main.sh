@@ -1,11 +1,11 @@
 set -x
-nohup python3 main.py           --gpu_number='0,1'  \
+nohup python3 main.py           --gpu_number='2,3'  \
                                 --zmax=20  \
                                 --D=250  \
                                 --clear_dist=1  \
                                 --upsampling_factor=2  \
                                 --scaling_factor=170  \
-                                --batch_size=8  \
+                                --batch_size=4  \
                                 --initial_learning_rate=0.0005  \
                                 --lr_decay_per_epoch=3  \
                                 --lr_decay_factor=0.5  \
