@@ -7,9 +7,10 @@ Np = 96;
 
 %% Modify path and params
 % Ntest  = [0,1];
-Ntest  = [1,50];
+Ntest  = [1,100];
+% nSource = 5;
 
-base_path = '/home/tonielook/rpsf/20211014_exploring_single_image/data_test/test35/'; % save path
+base_path = ['../../data_test/test',num2str(nSource)]; % save path
 % train_path = [base_path,'train/'];  % path to save train images with noise
 % clean_path = [base_path,'clean/']; % path to save noiseless ground truth images
 train_path = base_path;  % path to save train images with noise
@@ -21,7 +22,6 @@ end
 
 % nSource is a ranbudom value uniformly distributed in [1,40]
 rng('shuffle');
-    nSource = 35;
 % all_nSource = randi([1,40],[Ntest(2),1]);
 all_nSource = [];
 all_photon = [];
@@ -30,7 +30,7 @@ all_depth = [];
 all_overlap = [];
 
 %% generate images
-label_file = fopen([train_path,'label.txt'],'w');
+label_file = fopen([train_path,'/label.txt'],'w');
 for ii = Ntest(1):Ntest(2)
     rng('shuffle');
 %     nSource = all_nSource(ii+1);
@@ -79,8 +79,8 @@ for ii = Ntest(1):Ntest(2)
     all_depth = [all_depth;zeta_true'];
 
     % save mat file
-    save([train_path,'im',num2str(ii),'.mat'],'g');
-    save([clean_path,'I',num2str(ii),'.mat'],'I0');
+    save([train_path,'/im',num2str(ii),'.mat'],'g');
+    save([clean_path,'/I',num2str(ii),'.mat'],'I0');
     disp([num2str(ii),' saved']);
     % save labels
     LABEL = [ii*ones(1,nSource); Yp_true; Xp_true; zeta_true; flux'];
@@ -90,11 +90,11 @@ end
 fclose(label_file);
 
 %% save all_flux, all_nSource, all_nSource_v1
-save([base_path,'photons.mat'],'all_photon');
-save([base_path,'flux.mat'],'all_flux');
-save([base_path,'nSource.mat'],'all_nSource');
-save([base_path,'depth.mat'],'all_depth');
-save([base_path,'overlap.mat'],'all_overlap');
+save([base_path,'/photons.mat'],'all_photon');
+save([base_path,'/flux.mat'],'all_flux');
+save([base_path,'/nSource.mat'],'all_nSource');
+save([base_path,'/depth.mat'],'all_depth');
+save([base_path,'/overlap.mat'],'all_overlap');
 
 %% visualize flux, all_nSource, all_nSource_v1
 figure; histogram(all_photon); title('Flux: photon');
