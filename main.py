@@ -172,11 +172,11 @@ if __name__ == '__main__':
     parser.add_argument('--lr_decay_factor',          type=float,         default=0.5,           help='lr decay factor')
     # resume
     parser.add_argument('--resume_training',          type=int,           default=0,             help='whether to resume training from checkpoint')
-    parser.add_argument('--checkpoint_path',          type=str,           default='/home/lingjia/Documents/microscope/Results_demo1/1015_maxEp1_nTr7000_nVal3000',       help='checkpoint to resume from')
+    parser.add_argument('--checkpoint_path',          type=str,           default='',       help='checkpoint to resume from')
     # path
-    parser.add_argument('--test_id_loc',              type=str,           default='/home/lingjia/Documents/microscope/tmp/id_test.txt')
-    parser.add_argument('--training_data_path',       type=str,           default='/home/lingjia/Documents/microscope/Data/training_images_zrange20',     help='path for training and validation data')
-    parser.add_argument('--result_path',              type=str,           default='/home/lingjia/Documents/microscope/Results',            help='path for save models')
+    parser.add_argument('--test_id_loc',              type=str,           default='')
+    parser.add_argument('--training_data_path',       type=str,           default='',     help='path for training and validation data')
+    parser.add_argument('--result_path',              type=str,           default='',            help='path for save models')
     parser.add_argument('--post_pro',              type=int,           default=0, help='whether do post processing in dnn')
     parser.add_argument('--model_use',             type=str,           choices=['cnn','cnn_residual'])
     opt = parser.parse_args()
