@@ -1,11 +1,14 @@
 #!/bin/bash
 set -x
-declare -a cps=("1111-nTrain2499-lr0.001-Epoch190-batchSize8-D250-cnn_residual/checkpoint_40" 
-                "1111-nTrain2499-lr0.001-Epoch190-batchSize8-D250-cnn_residual/checkpoint_50" 
-                "1111-nTrain2499-lr0.001-Epoch190-batchSize8-D250-cnn_residual/checkpoint_60"  
-)
-# pts=(5 10 15 20 25 30 35 40 45)
-pts=(5 25 45)
+# declare -a cps=("1111-nTrain2499-lr0.001-Epoch190-batchSize8-D250-cnn_residual/checkpoint_40" 
+#                 "1111-nTrain2499-lr0.001-Epoch190-batchSize8-D250-cnn_residual/checkpoint_50" 
+#                 "1111-nTrain2499-lr0.001-Epoch190-batchSize8-D250-cnn_residual/checkpoint_60"  
+# )
+# pts=(5 25 45)
+
+declare -a cps=("1112-nTrain8999-lr0.002-Epoch190-batchSize10-D250-cnn_residual/checkpoint_best_loss")
+pts=(5 10 15 20 25 30 35 40 45)
+
 for cp in "${cps[@]}"; do
     echo "$cp" >> ../test_output/postpro_result.csv
     for pt in ${pts[*]}; do
