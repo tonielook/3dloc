@@ -7,13 +7,14 @@ L = 4; Nzones = 7; b = 5; [Nx,Ny,Nz] = size(A); Np = Nx;
 tic
 %% Modify parameters here
 save_pred_info = 0; % save pred_label.txt
-nSource = 5;
+nSource = 40;
 
 % mat_path = [' ',num2str(nSource)]; % path for test data
 % pred_path = ' '; % path for prediction
 mat_path = ['../../data_test/test',num2str(nSource)]; % path for test data
 pred_path = ['../../test_output/test',num2str(nSource)];
 save_path = pred_path;
+
 
 %% main
 pred = readtable([pred_path,'/loc.csv']);
@@ -104,7 +105,7 @@ for nt = 1:100
     fprintf('Recall = %3.2f%%\n',recall(nt)*100);
     fprintf('Precision = %3.2f%%\n',precision(nt)*100);
     fprintf('---\n');
-    
+
     %% save pred_label.txt
     if save_pred_info
         [loc_x,loc_y,loc_z] = ind2sub(size(A),find(xIt>0)); 
@@ -181,6 +182,6 @@ title(['img',num2str(nt)])
 % title(['# of pts ', num2str(nSource)]);
 % xlabel('relative error')
 % ylabel('# of pts')
-
-load ([mat_path,'/I',num2str(nt),'.mat'])
-imagesc(imrotate(flip(I0,2),90))
+% 
+% load ([mat_path,'/I',num2str(nt),'.mat'])
+% imagesc(imrotate(flip(I0,2),90))

@@ -7,7 +7,7 @@ Np = 96;
 
 %% Modify path and params
 % Ntest  = [0,1];
-Ntest  = [1,10000];
+Ntest  = [15001,16000];
 
 base_path = '../../data_train/'; % save path
 train_path = [base_path,'train/'];  % path to save train images with noise
@@ -30,7 +30,7 @@ all_depth = [];
 all_overlap = [];
 
 %% generate images
-label_file = fopen([train_path,'label.txt'],'w');
+label_file = fopen([train_path,'label_val.txt'],'w');
 for ii = Ntest(1):Ntest(2)
     rng('shuffle');
 %     nSource = all_nSource(ii+1);
@@ -56,15 +56,15 @@ for ii = Ntest(1):Ntest(2)
         end
     end
     
-    %% flux
-%      Flux_true = poissrnd(2000,[1,length(Xp_true)]); % Random numbers from Poisson distribution
-%      Flux_true = ones(1,length(Xp_true))*2000;  % Photon = 2000
+    % flux
+     Flux_true = poissrnd(2000,[1,length(Xp_true)]); % Random numbers from Poisson distribution
+     Flux_true = ones(1,length(Xp_true))*2000;  % Photon = 2000
 
-    % flux follow uniform distribution
-    p = [3.0494e-05, -2.8545e-04, 0.0210, 0.0069, 13.3277];
-    pred_ratio = p(1)*abs(zeta_true').^4 + p(2)*abs(zeta_true').^3 + p(3)*abs(zeta_true').^2 + p(4)*abs(zeta_true') + p(5);
-    Flux_true = (rand(1,nSource)-0.5)*2*50+120;
-    Flux_true = pred_ratio'.*Flux_true;
+%     % flux follow uniform distribution
+%     p = [3.0494e-05, -2.8545e-04, 0.0210, 0.0069, 13.3277];
+%     pred_ratio = p(1)*abs(zeta_true').^4 + p(2)*abs(zeta_true').^3 + p(3)*abs(zeta_true').^2 + p(4)*abs(zeta_true') + p(5);
+%     Flux_true = (rand(1,nSource)-0.5)*2*50+120;
+%     Flux_true = pred_ratio'.*Flux_true;
     
     %% generate image based on 3d location and photon values
     Vtrue = [Xp_true Yp_true zeta_true Flux_true];

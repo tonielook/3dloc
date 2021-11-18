@@ -16,6 +16,8 @@ from utils.data import dataloader
 from utils.test_model import test_model
 from utils.train_model import train_model
 import time
+import fnmatch
+import re
 
 def learn_localization(rank,world_size,opt,setup_params):
     opt.rank = rank
@@ -23,9 +25,22 @@ def learn_localization(rank,world_size,opt,setup_params):
     init_DDP(opt)
 
     if opt.train_or_test == 'train':
-        # split data to train and validation set
-        tmp_train = np.arange(1,9000,1).tolist() 
-        tmp_valid = np.arange(9001,10000,1).tolist()
+        # split data to train and validation set        
+        tmp_train = np.arange(1,2501,1).tolist() 
+        tmp_valid = np.arange(9001,10001,1).tolist()
+        # ID 15001~16000 are speical vaildation imgs with possion flux
+        # tmp_valid = np.arange(15001,16001,1).tolist()
+        path_train = os.path.join(setup_params['training_data_path'],'train')
+        hardsamples = fnmatch.filter(os.listdir(path_train),'im20000*mat')
+        hs_IDs=[]
+        for hs in hardsamples:
+            hs_IDs.append(int(re.findall('[0-9]+',hs)[0]))
+        hs_num = len(hs_IDs)
+        print(hs_IDs)
+        if hs_num > 0 :
+            del tmp_train[-hs_num:]
+        tmp_train = tmp_train + hs_IDs
+        print(tmp_train)    
         train_IDs = [str(i) for i in tmp_train]
         valid_IDs = [str(i) for i in tmp_valid]
 

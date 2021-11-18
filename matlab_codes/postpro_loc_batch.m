@@ -104,7 +104,26 @@ for nt = 1:100
     fprintf('Recall = %3.2f%%\n',recall(nt)*100);
     fprintf('Precision = %3.2f%%\n',precision(nt)*100);
     fprintf('---\n');
+
+    % save hard samples if recall < 0.95
     
+    if ~exist('../../data_train/hardsamples/train/', 'dir')
+        mkdir('../../data_train/hardsamples/train/')
+    end
+
+    if re < 0.95
+       datestring = datestr(now,'yymmdd');
+       ns_padded = sprintf('%02d',nSource);
+       nt_padded = sprintf('%03d',nt);
+       hsfileidx = append('20000',datestring,ns_padded,nt_padded);
+       hslabel = gt_tmp;
+       hslabel(hslabel==nt) = str2num(hsfileidx);
+       dlmwrite('../../data_train/hardsamples/train/label.txt',hslabel,'precision',16,'delimiter',' ','-append');
+       save(['../../data_train/hardsamples/train/','im',hsfileidx,'.mat'],'g');
+       load ([mat_path,'/I',num2str(nt),'.mat']);
+       save(['../../data_train/hardsamples/train/','I',hsfileidx,'.mat'],'I0');
+    end
+
     %% save pred_label.txt
     if save_pred_info
         [loc_x,loc_y,loc_z] = ind2sub(size(A),find(xIt>0)); 
