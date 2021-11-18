@@ -21,9 +21,8 @@ end
 
 % nSource is a ranbudom value uniformly distributed in [1,40]
 rng('shuffle');
-    nSource = 5;
-% all_nSource = randi([1,40],[Ntest(2),1]);
-all_nSource = [];
+%     nSource = 5;
+all_nSource = randi([1,5],[Ntest(2),1]);
 all_photon = [];
 all_flux = [];
 all_depth = [];
@@ -33,7 +32,7 @@ all_overlap = [];
 label_file = fopen([train_path,'label.txt'],'w');
 for ii = Ntest(1):Ntest(2)
     rng('shuffle');
-%     nSource = all_nSource(ii+1);
+    nSource = all_nSource(ii+1);
     overlap_pts = min(randi([1,4]),floor(nSource/2));
 %     overlap_pts = 0;
     all_overlap = [all_overlap,overlap_pts];

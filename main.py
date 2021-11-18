@@ -28,7 +28,7 @@ def learn_localization(rank,world_size,opt,setup_params):
         training_volume = setup_params['training_volume'] + 1
         # split data to train and validation set        
         tmp_train = np.arange(1,training_volume,1).tolist() 
-        tmp_valid = np.arange(9001,10001,1).tolist()
+        tmp_valid = np.arange(2501,3501,1).tolist()
         # ID 15001~16000 are speical vaildation imgs with possion flux
         # tmp_valid = np.arange(15001,16001,1).tolist()
         path_train = os.path.join(setup_params['training_data_path'],'train')
