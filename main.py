@@ -25,8 +25,9 @@ def learn_localization(rank,world_size,opt,setup_params):
     init_DDP(opt)
 
     if opt.train_or_test == 'train':
+        training_volume = setup_params['training_volume'] + 1
         # split data to train and validation set        
-        tmp_train = np.arange(1,2501,1).tolist() 
+        tmp_train = np.arange(1,training_volume,1).tolist() 
         tmp_valid = np.arange(9001,10001,1).tolist()
         # ID 15001~16000 are speical vaildation imgs with possion flux
         # tmp_valid = np.arange(15001,16001,1).tolist()
@@ -192,8 +193,9 @@ if __name__ == '__main__':
     parser.add_argument('--test_id_loc',              type=str,           default='')
     parser.add_argument('--training_data_path',       type=str,           default='',     help='path for training and validation data')
     parser.add_argument('--result_path',              type=str,           default='',            help='path for save models')
-    parser.add_argument('--post_pro',              type=int,           default=0, help='whether do post processing in dnn')
-    parser.add_argument('--model_use',             type=str,           choices=['cnn','cnn_residual'])
+    parser.add_argument('--post_pro',                 type=int,           default=0, help='whether do post processing in dnn')
+    parser.add_argument('--model_use',                type=str,           choices=['cnn','cnn_residual'])
+    parser.add_argument('--training_volume',          type=int,           default=9000, help='training set volume, up to 9k')
     opt = parser.parse_args()
 
     opt.zmin = -opt.zmax
