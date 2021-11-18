@@ -1,19 +1,18 @@
 #!/bin/bash
 set -x
-# declare -a cps=("1111-nTrain2499-lr0.001-Epoch190-batchSize8-D250-cnn_residual/checkpoint_40" 
-#                 "1111-nTrain2499-lr0.001-Epoch190-batchSize8-D250-cnn_residual/checkpoint_50" 
-#                 "1111-nTrain2499-lr0.001-Epoch190-batchSize8-D250-cnn_residual/checkpoint_60"  
+# declare -a cps=("1104-nTrain2499-lr0.0005-Epoch190-batchSize8-D250-cnn_residual/checkpoint_best_loss" 
+#                 "1116-nTrain2500-lr0.0005-Epoch190-batchSize8-D250-cnn_residual/checkpoint_best_loss" 
 # )
 # pts=(5 25 45)
 
-declare -a cps=("1112-nTrain8999-lr0.002-Epoch190-batchSize10-D250-cnn_residual/checkpoint_best_loss")
+declare -a cps=("1117-nTrain2500-lr0.0005-Epoch190-batchSize8-D250-cnn_residual/checkpoint_best_loss")
 pts=(5 10 15 20 25 30 35 40 45)
 
 for cp in "${cps[@]}"; do
     echo "$cp" >> ../test_output/postpro_result.csv
     for pt in ${pts[*]}; do
         python3 main.py      --gpu_number='1' \
-            --checkpoint_path='../trained_model/'$cp \
+            --checkpoint_path='../../trained_model/'$cp \
             --training_data_path='../data_test/test'$pt \
             --result_path='../test_output/test'$pt \
             --model_use='cnn_residual'  \

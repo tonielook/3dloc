@@ -7,13 +7,14 @@ L = 4; Nzones = 7; b = 5; [Nx,Ny,Nz] = size(A); Np = Nx;
 tic
 %% Modify parameters here
 save_pred_info = 0; % save pred_label.txt
-% nSource = 5;
+nSource = 10;
 
 % mat_path = [' ',num2str(nSource)]; % path for test data
 % pred_path = ' '; % path for prediction
 mat_path = ['../../data_test/test',num2str(nSource)]; % path for test data
 pred_path = ['../../test_output/test',num2str(nSource)];
 save_path = pred_path;
+
 
 %% main
 pred = readtable([pred_path,'/loc.csv']);
@@ -34,7 +35,7 @@ if save_pred_info
     label = fopen([save_path,'/pred_label.txt'],'w');
 end
 
-for nt = 1:100
+for nt = 16:16
     %% Post-processing
     gt_tmp = gt(gt(:,1)==nt,:);
     pred_tmp = pred(pred(:,1)==nt,:);
@@ -105,25 +106,6 @@ for nt = 1:100
     fprintf('Precision = %3.2f%%\n',precision(nt)*100);
     fprintf('---\n');
 
-    % save hard samples if recall < 0.95
-    
-    if ~exist('../../data_train/hardsamples/train/', 'dir')
-        mkdir('../../data_train/hardsamples/train/')
-    end
-
-    if re < 0.95
-       datestring = datestr(now,'yymmdd');
-       ns_padded = sprintf('%02d',nSource);
-       nt_padded = sprintf('%03d',nt);
-       hsfileidx = append('20000',datestring,ns_padded,nt_padded);
-       hslabel = gt_tmp;
-       hslabel(hslabel==nt) = str2num(hsfileidx);
-       dlmwrite('../../data_train/hardsamples/train/label.txt',hslabel,'precision',16,'delimiter',' ','-append');
-       save(['../../data_train/hardsamples/train/','im',hsfileidx,'.mat'],'g');
-       load ([mat_path,'/I',num2str(nt),'.mat']);
-       save(['../../data_train/hardsamples/train/','I',hsfileidx,'.mat'],'I0');
-    end
-
     %% save pred_label.txt
     if save_pred_info
         [loc_x,loc_y,loc_z] = ind2sub(size(A),find(xIt>0)); 
@@ -153,28 +135,24 @@ end
 [loc_x_tp,loc_y_tp,loc_z_tp] = ind2sub(size(A),intersect(tp_pred,find(xIt>0))); 
 [loc_x_fp,loc_y_fp,loc_z_fp] = ind2sub(size(A),setxor(tp_pred,find(xIt>0))); 
 
-% figure;
-% % true positive - gt
-% scatter3(Vtrue(tp_gt)+49,Vtrue(nSource+tp_gt)+49,(Vtrue(2*nSource+tp_gt)+21)/2.1+1,'ko')
-% hold on
-% % false negative - gt
-% fn_gt = setxor(1:1:nSource,tp_gt);
-% scatter3(Vtrue(fn_gt)+49,Vtrue(nSource+fn_gt)+49,(Vtrue(2*nSource+fn_gt)+21)/2.1+1,'ro')
-% hold on
-% % true positive - pred
-% scatter3(loc_x_tp,loc_y_tp,loc_z_tp,'k^')
-% hold on
-% % false positive - pred
-% scatter3(loc_x_fp,loc_y_fp,loc_z_fp,'r^')
-% 
-% axis([1 96 1 96 0 21])
-% legend('tp-gt','fn-gt','tp-p','fp-p','Location','Southoutside','Orientation','horizontal')
-% title(['img',num2str(nt)])
-% load ([mat_path,'/I50.mat'])
-% imagesc(imrotate(flip(I0,2),90))
+figure;
+% true positive - gt
+scatter3(Vtrue(tp_gt)+49,Vtrue(nSource+tp_gt)+49,(Vtrue(2*nSource+tp_gt)+21)/2.1+1,'ko')
+hold on
+% false negative - gt
+fn_gt = setxor(1:1:nSource,tp_gt);
+scatter3(Vtrue(fn_gt)+49,Vtrue(nSource+fn_gt)+49,(Vtrue(2*nSource+fn_gt)+21)/2.1+1,'ro')
+hold on
+% true positive - pred
+scatter3(loc_x_tp,loc_y_tp,loc_z_tp,'k^')
+hold on
+% false positive - pred
+scatter3(loc_x_fp,loc_y_fp,loc_z_fp,'r^')
 
-% append results
-dlmwrite('../../test_output/postpro_result.csv',{nSource,mean_precision,mean_recall},'delimiter',',','-append');
+axis([1 96 1 96 0 21])
+legend('tp-gt','fn-gt','tp-p','fp-p','Location','Southoutside','Orientation','horizontal')
+% imagesc(I0.')
+title(['img',num2str(nt)])
 
 %% save current 3d grid
 % filename = [' '_',num2str(nt),'.png']; % save path
@@ -204,4 +182,6 @@ dlmwrite('../../test_output/postpro_result.csv',{nSource,mean_precision,mean_rec
 % title(['# of pts ', num2str(nSource)]);
 % xlabel('relative error')
 % ylabel('# of pts')
-
+% 
+load ([mat_path,'/I',num2str(nt),'.mat'])
+imagesc(imrotate(flip(I0,2),90))
