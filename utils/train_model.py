@@ -44,6 +44,13 @@ def train_model(cnn,optimizer,scheduler,device,training_generator,validation_gen
                 learning_results[key] = learning_results[key][:start_epoch]
             except:
                 pass
+        
+        learning_results = {'train_loss': [], 'valid_loss': [], 'train_dice': [], 'train_mse3d': [], \
+                             'valid_dice': [], 'valid_mse3d': [], 'max_valid': [], 'sum_valid': [],  \
+                            'steps_per_epoch': steps_train}
+        valid_loss_prev = float('Inf')
+
+        
         # visualize results of checkpoint in tensorboard
         if opt.rank==0:
             for ii in range(len(learning_results['train_loss'])):
@@ -57,7 +64,7 @@ def train_model(cnn,optimizer,scheduler,device,training_generator,validation_gen
                 logger.scalar_summary('Other/MaxOutSum', learning_results['sum_valid'][ii], ii+1)
 
         # initialize validation set best loss and jaccard
-        valid_loss_prev = np.min(learning_results['valid_loss'])
+        # valid_loss_prev = np.min(learning_results['valid_loss'])
 
     else:
         # start from scratch
