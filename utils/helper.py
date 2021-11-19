@@ -66,7 +66,7 @@ def print_log(print_string, log, arrow=True):
 
 def init_DDP(opt):
     os.environ['MASTER_ADDR']='localhost'
-    os.environ['MASTER_PORT']='123457'
+    os.environ['MASTER_PORT']='62121'
     gpus = [g.strip() for g in opt.gpu_number.split(',')]
     os.environ['CUDA_VISIBLE_DEVICES']=gpus[opt.rank]
     dist.init_process_group('GLOO',rank=opt.rank,world_size=opt.world_size)

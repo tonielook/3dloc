@@ -5,7 +5,7 @@ set -x
 # )
 # pts=(5 25 45)
 
-declare -a cps=("1117-nTrain2500-lr0.0005-Epoch190-batchSize8-D250-cnn_residual/checkpoint_best_loss")
+declare -a cps=("1119-nTrain3000-lr0.0005-Epoch190-batchSize8-D250-cnn_residual-resume/checkpoint_best_loss")
 pts=(5 10 15 20 25 30 35 40 45)
 
 for cp in "${cps[@]}"; do
