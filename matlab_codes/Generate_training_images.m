@@ -7,7 +7,7 @@ Np = 96;
 
 %% Modify path and params
 % Ntest  = [0,1];
-Ntest  = [1,4001];
+Ntest  = [1,3001];
 
 base_path = '../../data_train/'; % save path
 train_path = [base_path,'train/'];  % path to save train images with noise
@@ -22,7 +22,7 @@ end
 % nSource is a ranbudom value uniformly distributed in [1,40]
 rng('shuffle');
 %     nSource = 5;
-all_nSource = randi([5,10],[Ntest(2),1]);
+all_nSource = randi([10,20],[Ntest(2),1]);
 all_photon = [];
 all_flux = [];
 all_depth = [];
