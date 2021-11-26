@@ -7,13 +7,14 @@ Np = 96;
 
 %% Modify path and params
 % Ntest  = [0,1];
-Ntest  = [1,10000];
+Ntest  = [1,400];
+% nSource = 5;
 
-base_path = '../../data_train/'; % save path
-train_path = [base_path,'train/'];  % path to save train images with noise
-clean_path = [base_path,'clean/']; % path to save noiseless ground truth images
-% train_path = base_path;  % path to save train images with noise
-% clean_path = base_path; % path to save noiseless ground truth images
+base_path = ['../../data_test/test',num2str(nSource)]; % save path
+% train_path = [base_path,'train/'];  % path to save train images with noise
+% clean_path = [base_path,'clean/']; % path to save noiseless ground truth images
+train_path = base_path;  % path to save train images with noise
+clean_path = base_path; % path to save noiseless ground truth images
 if ~exist(train_path, 'dir') || ~exist(clean_path, 'dir')
    mkdir(train_path)
    mkdir(clean_path)
@@ -21,7 +22,6 @@ end
 
 % nSource is a ranbudom value uniformly distributed in [1,40]
 rng('shuffle');
-    nSource = 70;
 % all_nSource = randi([1,40],[Ntest(2),1]);
 all_nSource = [];
 all_photon = [];
@@ -30,41 +30,41 @@ all_depth = [];
 all_overlap = [];
 
 %% generate images
-label_file = fopen([train_path,'label.txt'],'w');
+label_file = fopen([train_path,'/label.txt'],'w');
 for ii = Ntest(1):Ntest(2)
     rng('shuffle');
 %     nSource = all_nSource(ii+1);
-    overlap_pts = min(randi([1,4]),floor(nSource/2));
-%     overlap_pts = 0;
+%     overlap_pts = min(randi([1,4]),floor(nSource/2));
+    overlap_pts = 0;
     all_overlap = [all_overlap,overlap_pts];
 
     Xp_true = 34*2*(rand(1,nSource-overlap_pts)-0.5);
     Yp_true = 34*2*(rand(1,nSource-overlap_pts)-0.5);
     zeta_true = 2*20*(rand(1,nSource-overlap_pts)-0.5);
     
-    %% add extra overlap points
-    for jj=1:length(Xp_true)
-        while length(Xp_true) < nSource
-            a = Xp_true(jj)+(rand(1)-0.5)*4;
-            b = Yp_true(jj)+(rand(1)-0.5)*4;
-            c = zeta_true(jj)+(rand(1)-0.5)*5;
-            if abs(a)<34 && abs(b)<34 && abs(c)<20 && 2<abs(zeta_true(jj)-c)
-                Xp_true = [Xp_true,a];
-                Yp_true = [Yp_true,b];
-                zeta_true = [zeta_true,c];
-            end
-        end
-    end
+%     %% add extra overlap points
+%     for jj=1:length(Xp_true)
+%         while length(Xp_true) < nSource
+%             a = Xp_true(jj)+(rand(1)-0.5)*4;
+%             b = Yp_true(jj)+(rand(1)-0.5)*4;
+%             c = zeta_true(jj)+(rand(1)-0.5)*5;
+%             if abs(a)<34 && abs(b)<34 && abs(c)<20 && 2<abs(zeta_true(jj)-c)
+%                 Xp_true = [Xp_true,a];
+%                 Yp_true = [Yp_true,b];
+%                 zeta_true = [zeta_true,c];
+%             end
+%         end
+%     end
     
     %% flux
-%      Flux_true = poissrnd(2000,[1,length(Xp_true)]); % Random numbers from Poisson distribution
-%      Flux_true = ones(1,length(Xp_true))*2000;  % Photon = 2000
+     Flux_true = poissrnd(2000,[1,length(Xp_true)]); % Random numbers from Poisson distribution
+     Flux_true = ones(1,length(Xp_true))*2000;  % Photon = 2000
 
     % flux follow uniform distribution
-    p = [3.0494e-05, -2.8545e-04, 0.0210, 0.0069, 13.3277];
-    pred_ratio = p(1)*abs(zeta_true').^4 + p(2)*abs(zeta_true').^3 + p(3)*abs(zeta_true').^2 + p(4)*abs(zeta_true') + p(5);
-    Flux_true = (rand(1,nSource)-0.5)*2*50+120;
-    Flux_true = pred_ratio'.*Flux_true;
+%     p = [3.0494e-05, -2.8545e-04, 0.0210, 0.0069, 13.3277];
+%     pred_ratio = p(1)*abs(zeta_true').^4 + p(2)*abs(zeta_true').^3 + p(3)*abs(zeta_true').^2 + p(4)*abs(zeta_true') + p(5);
+%     Flux_true = (rand(1,nSource)-0.5)*2*50+120;
+%     Flux_true = pred_ratio'.*Flux_true;
     
     %% generate image based on 3d location and photon values
     Vtrue = [Xp_true Yp_true zeta_true Flux_true];
@@ -79,8 +79,8 @@ for ii = Ntest(1):Ntest(2)
     all_depth = [all_depth;zeta_true'];
 
     % save mat file
-    save([train_path,'im',num2str(ii),'.mat'],'g');
-    save([clean_path,'I',num2str(ii),'.mat'],'I0');
+    save([train_path,'/im',num2str(ii),'.mat'],'g');
+    save([clean_path,'/I',num2str(ii),'.mat'],'I0');
     disp([num2str(ii),' saved']);
     % save labels
     LABEL = [ii*ones(1,nSource); Yp_true; Xp_true; zeta_true; flux'];
@@ -88,14 +88,13 @@ for ii = Ntest(1):Ntest(2)
 
 end
 fclose(label_file);
-copyfile '../../data_train/train/label.txt' '../../data_train/train/label.txt.bak';
 
 %% save all_flux, all_nSource, all_nSource_v1
-save([base_path,'photons.mat'],'all_photon');
-save([base_path,'flux.mat'],'all_flux');
-save([base_path,'nSource.mat'],'all_nSource');[0]
-save([base_path,'depth.mat'],'all_depth');
-save([base_path,'overlap.mat'],'all_overlap');
+save([base_path,'/photons.mat'],'all_photon');
+save([base_path,'/flux.mat'],'all_flux');
+save([base_path,'/nSource.mat'],'all_nSource');
+save([base_path,'/depth.mat'],'all_depth');
+save([base_path,'/overlap.mat'],'all_overlap');
 
 %% visualize flux, all_nSource, all_nSource_v1
 figure; histogram(all_photon); title('Flux: photon');

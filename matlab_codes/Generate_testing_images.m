@@ -7,7 +7,7 @@ Np = 96;
 
 %% Modify path and params
 % Ntest  = [0,1];
-Ntest  = [1,100];
+Ntest  = [1,200];
 % nSource = 5;
 
 base_path = ['../../data_test/test',num2str(nSource)]; % save path
