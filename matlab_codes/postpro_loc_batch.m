@@ -22,11 +22,11 @@ gt = readtable([pred_path,'/label.txt']);
 gt = table2array(gt(:,1:5));
 
 % evaluation metrics
-recall = zeros(200,1);
-precision = zeros(200,1);
-jaccard_index = zeros(200,1);
-f1_score = zeros(200,1);
-initial_pred_pts = zeros(200,1);
+recall = zeros(100,1);
+precision = zeros(100,1);
+jaccard_index = zeros(100,1);
+f1_score = zeros(100,1);
+initial_pred_pts = zeros(100,1);
 flux_all = [];
 
 if save_pred_info
@@ -34,7 +34,7 @@ if save_pred_info
     label = fopen([save_path,'/pred_label.txt'],'w');
 end
 
-for nt = 1:200
+for nt = 1:100
     %% Post-processing
     gt_tmp = gt(gt(:,1)==nt,:);
     pred_tmp = pred(pred(:,1)==nt,:);
@@ -112,13 +112,13 @@ for nt = 1:200
     end
 
     if re < 0.95
-       datestring = datestr(now,'yymmdd');
+       datestring = datestr(now,'yymmddHH');
        ns_padded = sprintf('%02d',nSource);
        nt_padded = sprintf('%03d',nt);
        hsfileidx = append('20000',datestring,ns_padded,nt_padded);
        hslabel = gt_tmp;
        hslabel(hslabel==nt) = str2num(hsfileidx);
-       dlmwrite('../../data_train/hardsamples/train/label.txt',hslabel,'precision',16,'delimiter',' ','-append');
+       dlmwrite('../../data_train/hardsamples/train/label.txt',hslabel,'precision',18,'delimiter',' ','-append');
        save(['../../data_train/hardsamples/train/','im',hsfileidx,'.mat'],'g');
        load ([mat_path,'/I',num2str(nt),'.mat']);
        save(['../../data_train/hardsamples/train/','I',hsfileidx,'.mat'],'I0');
@@ -133,10 +133,10 @@ for nt = 1:200
 end
 
 %% display mean evaluation metrics
-mean_precision = sum(precision)/200;
-mean_recall = sum(recall)/200;
-mean_jaccard = sum(jaccard_index)/200;
-mean_f1_score = sum(f1_score)/200;
+mean_precision = sum(precision)/100;
+mean_recall = sum(recall)/100;
+mean_jaccard = sum(jaccard_index)/100;
+mean_f1_score = sum(f1_score)/100;
 fprintf('test%d,\nprecision=%.4f, recall=%.4f, jaccard=%.4f, f1 socre=%.4f\n',nSource,mean_precision,mean_recall,mean_jaccard,mean_f1_score);
 toc
 mean(initial_pred_pts)
