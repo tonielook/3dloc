@@ -21,7 +21,7 @@ end
 
 % nSource is a ranbudom value uniformly distributed in [1,40]
 rng('shuffle');
-    nSource = 70;
+    nSource = 45;
 % all_nSource = randi([1,40],[Ntest(2),1]);
 all_nSource = [];
 all_photon = [];
@@ -30,6 +30,10 @@ all_depth = [];
 all_overlap = [];
 
 %% generate images
+datestring = datestr(now,'yymmddHH');
+labelfilebak = ['../../data_train/train/label_',datestring,'.txt']
+copyfile ('../../data_train/train/label.txt',labelfilebak);
+
 label_file = fopen([train_path,'label.txt'],'w');
 for ii = Ntest(1):Ntest(2)
     rng('shuffle');

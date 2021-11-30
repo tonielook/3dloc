@@ -112,13 +112,13 @@ for nt = 1:100
     end
 
     if re < 0.95
-       datestring = datestr(now,'yymmddHH');
+       datestring = datestr(now,'mmddHH');
        ns_padded = sprintf('%02d',nSource);
        nt_padded = sprintf('%03d',nt);
        hsfileidx = append('20000',datestring,ns_padded,nt_padded);
        hslabel = gt_tmp;
        hslabel(hslabel==nt) = str2num(hsfileidx);
-       dlmwrite('../../data_train/hardsamples/train/label.txt',hslabel,'precision',18,'delimiter',' ','-append');
+       dlmwrite('../../data_train/hardsamples/train/label.txt',hslabel,'precision',16,'delimiter',' ','-append');
        save(['../../data_train/hardsamples/train/','im',hsfileidx,'.mat'],'g');
        load ([mat_path,'/I',num2str(nt),'.mat']);
        save(['../../data_train/hardsamples/train/','I',hsfileidx,'.mat'],'I0');

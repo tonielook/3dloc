@@ -112,7 +112,7 @@ for nt = 1:400
     end
 
     if re < 0.95
-       datestring = datestr(now,'yymmdd');
+       datestring = datestr(now,'ddHHMM');
        ns_padded = sprintf('%02d',nSource);
        nt_padded = sprintf('%03d',nt);
        hsfileidx = append('20000',datestring,ns_padded,nt_padded);
