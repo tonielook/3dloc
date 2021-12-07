@@ -26,9 +26,11 @@ def learn_localization(rank,world_size,opt,setup_params):
 
     if opt.train_or_test == 'train':
         training_volume = setup_params['training_volume'] + 1
+        valid_start = training_volume
+        valid_end = valid_start + 1000
         # split data to train and validation set        
         tmp_train = np.arange(1,training_volume,1).tolist() 
-        tmp_valid = np.arange(9001,10001,1).tolist()
+        tmp_valid = np.arange(valid_start,valid_end,1).tolist()
         # ID 15001~16000 are speical vaildation imgs with possion flux
         # tmp_valid = np.arange(15001,16001,1).tolist()
         path_train = os.path.join(setup_params['training_data_path'],'train')
@@ -37,11 +39,11 @@ def learn_localization(rank,world_size,opt,setup_params):
         for hs in hardsamples:
             hs_IDs.append(int(re.findall('[0-9]+',hs)[0]))
         hs_num = len(hs_IDs)
-        print(hs_IDs)
         if hs_num > 0 :
             del tmp_train[-hs_num:]
         tmp_train = tmp_train + hs_IDs
-        print(tmp_train)    
+        print(tmp_train)
+        print(hs_num)    
         train_IDs = [str(i) for i in tmp_train]
         valid_IDs = [str(i) for i in tmp_valid]
 
@@ -53,7 +55,7 @@ def learn_localization(rank,world_size,opt,setup_params):
         setup_params['pixel_size_axial'] = (setup_params['zmax'] - setup_params['zmin'] +1 + 2*setup_params['clear_dist'])/setup_params['D']
 
         # output folder for results
-        t = time.strftime('%m%d') + \
+        t = time.strftime('%m%d%H') + \
             '-nTrain'+str(setup_params['ntrain']) + \
             '-lr'+str(setup_params['initial_learning_rate']) + \
             '-Epoch'+str(setup_params['maxEpoch']) + \

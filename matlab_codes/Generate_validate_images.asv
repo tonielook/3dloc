@@ -7,7 +7,7 @@ Np = 96;
 
 %% Modify path and params
 % Ntest  = [0,1];
-Ntest  = [15001,16000];
+Ntest  = [15002,15003];
 
 base_path = '../../data_train/'; % save path
 train_path = [base_path,'train/'];  % path to save train images with noise
@@ -21,7 +21,7 @@ end
 
 % nSource is a ranbudom value uniformly distributed in [1,40]
 rng('shuffle');
-    nSource = 40;
+    nSource = 1;
 % all_nSource = randi([1,40],[Ntest(2),1]);
 all_nSource = [];
 all_photon = [];
@@ -96,12 +96,14 @@ save([base_path,'nSource.mat'],'all_nSource');[0]
 save([base_path,'depth.mat'],'all_depth');
 save([base_path,'overlap.mat'],'all_overlap');
 
-%% visualize flux, all_nSource, all_nSource_v1
-figure; histogram(all_photon); title('Flux: photon');
-figure; histogram(all_flux); title('flux');
-figure; histogram(all_depth); title('depth');
-figure; histogram(all_nSource); title('nSource');
-figure; histogram(all_overlap); title('num of overlap points');
+% %% visualize flux, all_nSource, all_nSource_v1
+% figure; histogram(all_photon); title('Flux: photon');
+% figure; histogram(all_flux); title('flux');
+% figure; histogram(all_depth); title('depth');
+% figure; histogram(all_nSource); title('nSource');
+% figure; histogram(all_overlap); title('num of overlap points');
+
+imagesc(imrotate(flip(I0,2),90));
 
 %% visualize 3d plot
 % figure;
