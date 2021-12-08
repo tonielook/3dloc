@@ -92,7 +92,7 @@ fclose(label_file);
 %% save all_flux, all_nSource, all_nSource_v1
 save([base_path,'photons.mat'],'all_photon');
 save([base_path,'flux.mat'],'all_flux');
-save([base_path,'nSource.mat'],'all_nSource');[0]
+save([base_path,'nSource.mat'],'all_nSource');
 save([base_path,'depth.mat'],'all_depth');
 save([base_path,'overlap.mat'],'all_overlap');
 
