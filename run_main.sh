@@ -1,5 +1,5 @@
 set -x
-nohup python3 main.py           --gpu_number='2,3'  \
+nohup python3 main.py           --gpu_number='0,1'  \
                                 --zmax=20  \
                                 --D=250  \
                                 --clear_dist=1  \
