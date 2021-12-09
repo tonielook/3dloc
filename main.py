@@ -27,7 +27,7 @@ def learn_localization(rank,world_size,opt,setup_params):
     if opt.train_or_test == 'train':
         training_volume = setup_params['training_volume'] + 1
         valid_start = training_volume
-        valid_end = valid_start + 1000
+        valid_end = valid_start + setup_params['validation_volume']
         # split data to train and validation set        
         tmp_train = np.arange(1,training_volume,1).tolist() 
         tmp_valid = np.arange(valid_start,valid_end,1).tolist()
@@ -198,6 +198,7 @@ if __name__ == '__main__':
     parser.add_argument('--post_pro',                 type=int,           default=0, help='whether do post processing in dnn')
     parser.add_argument('--model_use',                type=str,           choices=['cnn','cnn_residual'])
     parser.add_argument('--training_volume',          type=int,           default=9000, help='training set volume, up to 9k')
+    parser.add_argument('--validation_volume',        type=int,           default=1000, help='validation set volume')
     opt = parser.parse_args()
 
     opt.zmin = -opt.zmax
