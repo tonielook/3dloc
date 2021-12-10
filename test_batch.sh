@@ -6,11 +6,12 @@ set -x
 # )
 # pts=(5 25 45)
 
-declare -a cps=("120822-nTrain2500-lr0.001-Epoch190-batchSize10-D250-cnn_residual/checkpoint_best_loss")
+declare -a cps=("120915-nTrain9000-lr0.001-Epoch190-batchSize10-D250-cnn_residual/checkpoint_best_loss")
 pts=(5 10 15 20 25 30 35 40 45)
 
 for cp in "${cps[@]}"; do
     echo "$cp" >> ../test_output/postpro_result.csv
+    echo "batch,testsize,nSource,id,recall" >> ../data_train/hardsamples/summary.csv
     for pt in ${pts[*]}; do
         python3 main.py      --gpu_number='1' \
             --checkpoint_path='../../trained_model/'$cp \
