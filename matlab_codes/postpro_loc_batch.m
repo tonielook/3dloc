@@ -176,7 +176,7 @@ end
 % imagesc(imrotate(flip(I0,2),90))
 
 % append results
-dlmwrite('../../test_output/postpro_result.csv',{nSource,mean_precision,mean_recall},'delimiter',',','-append');
+dlmwrite('../../test_output/postpro_result.csv',{nSource,mean_precision,mean_recall,testsize},'delimiter',',','-append');
 
 %% save current 3d grid
 % filename = [' '_',num2str(nt),'.png']; % save path
