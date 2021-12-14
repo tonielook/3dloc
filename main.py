@@ -42,6 +42,7 @@ def learn_localization(rank,world_size,opt,setup_params):
         if hs_num > 0 :
             del tmp_train[-hs_num:]
         tmp_train = tmp_train + hs_IDs
+        # tmp_train = hs_IDs
         print(tmp_train)
         print(hs_num)    
         train_IDs = [str(i) for i in tmp_train]
