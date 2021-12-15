@@ -16,8 +16,9 @@ nohup python3 main.py           --gpu_number='2,3'  \
                                 --train_or_test='train'  \
                                 --training_data_path='../data_train'  \
                                 --result_path='../../trained_model'  \
-                                --resume_training=1  \
-                                --checkpoint_path='../../trained_model/120915-nTrain9000-lr0.001-Epoch190-batchSize10-D250-cnn_residual/checkpoint_best_loss'  \
+                                --resume_training=0  \
                                 --model_use='cnn_residual'  \
                                 > ../../trained_model/training_main_sh.log 2>&1 &
 set +x
+
+                                # --checkpoint_path='../../trained_model/120915-nTrain9000-lr0.001-Epoch190-batchSize10-D250-cnn_residual/checkpoint_best_loss'  \

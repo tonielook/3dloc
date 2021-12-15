@@ -21,7 +21,7 @@ end
 
 % nSource is a ranbudom value uniformly distributed in [1,40]
 rng('shuffle');
-    nSource = 65;
+    nSource = 70;
 % all_nSource = randi([1,40],[Ntest(2),1]);
 all_nSource = [];
 all_photon = [];

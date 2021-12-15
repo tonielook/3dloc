@@ -39,8 +39,8 @@ def learn_localization(rank,world_size,opt,setup_params):
         for hs in hardsamples:
             hs_IDs.append(int(re.findall('[0-9]+',hs)[0]))
         hs_num = len(hs_IDs)
-        if hs_num > 0 :
-            del tmp_train[-hs_num:]
+        # if hs_num > 0 :
+        #     del tmp_train[-hs_num:]
         tmp_train = tmp_train + hs_IDs
         # tmp_train = hs_IDs
         print(tmp_train)
