@@ -112,7 +112,9 @@ for nt = 1:testsize
         mkdir('../../data_train/hardsamples/train/')
     end
 
-    if re < 0.95
+    % if re < 0.95
+    % hs_recall_bar=0.95
+    if re < hs_recall_bar
        datestring = datestr(now,'mmddHH');
        ns_padded = sprintf('%02d',nSource);
        nt_padded = sprintf('%03d',nt);
