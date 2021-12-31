@@ -228,7 +228,7 @@ def train_model(cnn,optimizer,scheduler,device,training_generator,validation_gen
                 pickle.dump(learning_results, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
         # if no improvement for more than 7 epochs break training
-        if not_improve >= 10 or optimizer.param_groups[0]['lr']<1e-7:
+        if not_improve >= 15 or optimizer.param_groups[0]['lr']<1e-7:
             break
 
     # measure time that took the model to train

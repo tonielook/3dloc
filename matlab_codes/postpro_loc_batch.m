@@ -20,13 +20,14 @@ pred = readtable([pred_path,'/loc.csv']);
 pred = table2array(pred);
 gt = readtable([pred_path,'/label.txt']);
 gt = table2array(gt(:,1:5));
+testsize=size(dir([mat_path '/im*.mat']),1);
 
 % evaluation metrics
-recall = zeros(100,1);
-precision = zeros(100,1);
-jaccard_index = zeros(100,1);
-f1_score = zeros(100,1);
-initial_pred_pts = zeros(100,1);
+recall = zeros(testsize,1);
+precision = zeros(testsize,1);
+jaccard_index = zeros(testsize,1);
+f1_score = zeros(testsize,1);
+initial_pred_pts = zeros(testsize,1);
 flux_all = [];
 
 if save_pred_info
@@ -34,7 +35,7 @@ if save_pred_info
     label = fopen([save_path,'/pred_label.txt'],'w');
 end
 
-for nt = 1:100
+for nt = 1:testsize
     %% Post-processing
     gt_tmp = gt(gt(:,1)==nt,:);
     pred_tmp = pred(pred(:,1)==nt,:);
@@ -111,7 +112,9 @@ for nt = 1:100
         mkdir('../../data_train/hardsamples/train/')
     end
 
-    if re < 0.95
+    % if re < 0.95
+    % hs_recall_bar=0.95
+    if re < hs_recall_bar
        datestring = datestr(now,'mmddHH');
        ns_padded = sprintf('%02d',nSource);
        nt_padded = sprintf('%03d',nt);
@@ -122,6 +125,7 @@ for nt = 1:100
        save(['../../data_train/hardsamples/train/','im',hsfileidx,'.mat'],'g');
        load ([mat_path,'/I',num2str(nt),'.mat']);
        save(['../../data_train/hardsamples/train/','I',hsfileidx,'.mat'],'I0');
+       dlmwrite('../../data_train/hardsamples/summary.csv',{str2num(datestring),testsize,nSource,str2num(hsfileidx),re},'precision',16,'delimiter',',','-append');
     end
 
     %% save pred_label.txt
@@ -133,10 +137,10 @@ for nt = 1:100
 end
 
 %% display mean evaluation metrics
-mean_precision = sum(precision)/100;
-mean_recall = sum(recall)/100;
-mean_jaccard = sum(jaccard_index)/100;
-mean_f1_score = sum(f1_score)/100;
+mean_precision = mean(precision);
+mean_recall = mean(recall);
+mean_jaccard = mean(jaccard_index);
+mean_f1_score = mean(f1_score);
 fprintf('test%d,\nprecision=%.4f, recall=%.4f, jaccard=%.4f, f1 socre=%.4f\n',nSource,mean_precision,mean_recall,mean_jaccard,mean_f1_score);
 toc
 mean(initial_pred_pts)
@@ -145,7 +149,7 @@ mean(initial_pred_pts)
 if save_pred_info
     fclose(label);
     % save precision and recall into csv
-    ex = [[1:1:100]',precision,recall,jaccard_index,f1_score];
+    ex = [[1:1:testsize]',precision,recall,jaccard_index,f1_score];
     writematrix(ex,[save_path,'/eval.csv']);
 end
 
@@ -174,7 +178,7 @@ end
 % imagesc(imrotate(flip(I0,2),90))
 
 % append results
-dlmwrite('../../test_output/postpro_result.csv',{nSource,mean_precision,mean_recall},'delimiter',',','-append');
+dlmwrite('../../test_output/postpro_result.csv',{nSource,mean_precision,mean_recall,testsize},'delimiter',',','-append');
 
 %% save current 3d grid
 % filename = [' '_',num2str(nt),'.png']; % save path

@@ -27,23 +27,27 @@ def learn_localization(rank,world_size,opt,setup_params):
     if opt.train_or_test == 'train':
         training_volume = setup_params['training_volume'] + 1
         valid_start = training_volume
-        valid_end = valid_start + 1000
+        valid_end = valid_start + setup_params['validation_volume']
         # split data to train and validation set        
         tmp_train = np.arange(1,training_volume,1).tolist() 
         tmp_valid = np.arange(valid_start,valid_end,1).tolist()
         # ID 15001~16000 are speical vaildation imgs with possion flux
         # tmp_valid = np.arange(15001,16001,1).tolist()
-        path_train = os.path.join(setup_params['training_data_path'],'train')
-        hardsamples = fnmatch.filter(os.listdir(path_train),'im20000*mat')
-        hs_IDs=[]
-        for hs in hardsamples:
-            hs_IDs.append(int(re.findall('[0-9]+',hs)[0]))
-        hs_num = len(hs_IDs)
-        if hs_num > 0 :
-            del tmp_train[-hs_num:]
-        tmp_train = tmp_train + hs_IDs
-        print(tmp_train)
-        print(hs_num)    
+
+        if setup_params['train_with_hard_sample'] == 1:
+            path_train = os.path.join(setup_params['training_data_path'],'train')
+            hardsamples = fnmatch.filter(os.listdir(path_train),'im20000*mat')
+            hs_IDs=[]
+            for hs in hardsamples:
+                hs_IDs.append(int(re.findall('[0-9]+',hs)[0]))
+            hs_num = len(hs_IDs)
+            # if hs_num > 0 :
+            #     del tmp_train[-hs_num:]
+            tmp_train = tmp_train + hs_IDs
+            # tmp_train = hs_IDs
+            print(tmp_train)
+            print(hs_num)    
+
         train_IDs = [str(i) for i in tmp_train]
         valid_IDs = [str(i) for i in tmp_valid]
 
@@ -198,6 +202,8 @@ if __name__ == '__main__':
     parser.add_argument('--post_pro',                 type=int,           default=0, help='whether do post processing in dnn')
     parser.add_argument('--model_use',                type=str,           choices=['cnn','cnn_residual'])
     parser.add_argument('--training_volume',          type=int,           default=9000, help='training set volume, up to 9k')
+    parser.add_argument('--validation_volume',        type=int,           default=1000, help='validation set volume')
+    parser.add_argument('--train_with_hard_sample',   type=int,           default=0,             help='whether to train with hard samples')
     opt = parser.parse_args()
 
     opt.zmin = -opt.zmax

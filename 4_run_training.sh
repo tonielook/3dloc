@@ -6,6 +6,8 @@ nohup python3 main.py           --gpu_number='2,3'  \
                                 --upsampling_factor=2  \
                                 --scaling_factor=170  \
                                 --training_volume=9000 \
+                                --validation_volume=1000 \
+                                --train_with_hard_sample=0 \
                                 --batch_size=10  \
                                 --initial_learning_rate=0.001  \
                                 --lr_decay_per_epoch=3  \
@@ -16,7 +18,8 @@ nohup python3 main.py           --gpu_number='2,3'  \
                                 --training_data_path='../data_train'  \
                                 --result_path='../../trained_model'  \
                                 --resume_training=0  \
-                                --checkpoint_path=''  \
                                 --model_use='cnn_residual'  \
                                 > ../../trained_model/training_main_sh.log 2>&1 &
 set +x
+
+                                # --checkpoint_path='../../trained_model/120915-nTrain9000-lr0.001-Epoch190-batchSize10-D250-cnn_residual/checkpoint_best_loss'  \

@@ -1,25 +1,10 @@
-% clear; close all
+%  clear; close all
 % 1000 photos case
 
 load('data_natural_order_A'); % Single role 
 global   Np nSource L Nzones
 L = 4; Nzones = 7; 
 % nSource = 5;
-
-base_path = ['../../../data_test/test',num2str(nSource)]; % save path
-% train_path = [base_path,'train/'];  % path to save train images with noise
-% clean_path = [base_path,'clean/']; % path to save noiseless ground truth images
-train_path = base_path;  % path to save train images with noise
-clean_path = base_path; % path to save noiseless ground truth images
-if ~exist(train_path, 'dir') || ~exist(clean_path, 'dir')
-   mkdir(train_path)
-end
-all_nSource = [];
-all_photon = [];
-all_flux = [];
-all_depth = [];
-all_overlap = [];
-
 [Nx,Ny,Nz] = size(A); Np = Nx;
 N_test  = 100;
 interest_reg = zeros(32,nSource); 
@@ -42,11 +27,9 @@ Flux_ref = 0;
 % 0 is without
 %==================================================================
 
-label_file = fopen([train_path,'/label.txt'],'w');
-
 for nt = 1: N_test % flux test using 49
     fprintf('Test %d\n',nt)
-    rng('shuffle');
+    rng(50*nt)
 %% ground true and observed image not on grid point
     real_pos = zeros(nSource, 3);
     %%-------------- small region--------------------
@@ -70,14 +53,6 @@ for nt = 1: N_test % flux test using 49
     end
     b = 5; g = poissrnd(I0+b); % Obversed image
  
-    % save mat file
-    save([train_path,'/im',num2str(nt),'.mat'],'g');
-    save([clean_path,'/I',num2str(nt),'.mat'],'I0');
-    disp([num2str(nt),' saved']);
-    % save labels
-    LABEL = [nt*ones(1,nSource); Yp_true; Xp_true; zeta_true; flux'];
-    fprintf(label_file,'%d %6.4f %6.4f %6.4f %6.4f \n',LABEL);
-
 %% Algorithm on localization
     tic
     switch method 
@@ -176,8 +151,6 @@ for nt = 1: N_test % flux test using 49
     fprintf('---\n');
  
 end
-
-fclose(label_file);
 
 mean_recall=mean(recall);
 mean_precision=mean(precision);
