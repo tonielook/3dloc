@@ -117,15 +117,15 @@ for nt = 1:testsize
     if re < hs_recall_bar
        datestring = datestr(now,'mmddHH');
        ns_padded = sprintf('%02d',nSource);
-       nt_padded = sprintf('%04d',nt);
+       nt_padded = sprintf('%03d',nt);
        hsfileidx = append('20000',datestring,ns_padded,nt_padded);
        hslabel = gt_tmp;
        hslabel(hslabel==nt) = str2num(hsfileidx);
-       dlmwrite('../../data_train/hardsamples/train/label.txt',hslabel,'precision',17,'delimiter',' ','-append');
+       dlmwrite('../../data_train/hardsamples/train/label.txt',hslabel,'precision',16,'delimiter',' ','-append');
        save(['../../data_train/hardsamples/train/','im',hsfileidx,'.mat'],'g');
        load ([mat_path,'/I',num2str(nt),'.mat']);
        save(['../../data_train/hardsamples/train/','I',hsfileidx,'.mat'],'I0');
-       dlmwrite('../../data_train/hardsamples/summary.csv',{str2num(datestring),testsize,nSource,str2num(hsfileidx),re},'precision',17,'delimiter',',','-append');
+       dlmwrite('../../data_train/hardsamples/summary.csv',{str2num(datestring),testsize,nSource,str2num(hsfileidx),re},'precision',16,'delimiter',',','-append');
     end
 
     %% save pred_label.txt

@@ -6,7 +6,8 @@ global   Np nSource L Nzones
 L = 4; Nzones = 7; 
 % nSource = 5;
 
-base_path = ['../../../data_test/test',num2str(nSource)]; % save path
+datestring = datestr(now,'yyyymmddHH');
+base_path = ['../../../data_test_var_',datestring,'/test',num2str(nSource)]; % save path
 % train_path = [base_path,'train/'];  % path to save train images with noise
 % clean_path = [base_path,'clean/']; % path to save noiseless ground truth images
 train_path = base_path;  % path to save train images with noise
@@ -183,7 +184,7 @@ mean_recall=mean(recall);
 mean_precision=mean(precision);
 mean_time=mean(time);
 
-dlmwrite('../../../test_output/var/result.csv',{N_test,nSource,mean_precision,mean_recall,mean_time},'delimiter',',','-append');
+dlmwrite('../../../test_output/var/result_var.csv',{N_test,nSource,mean_precision,mean_recall,mean_time},'delimiter',',','-append');
 
 
 
