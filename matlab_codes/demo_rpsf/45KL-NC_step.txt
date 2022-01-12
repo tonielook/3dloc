@@ -1,0 +1,198 @@
+
+==========
+mu = 0.0040;a = 50.0000; nu = 0.0200; lambda = 40.0000; 
+Recall rate = 93.89% 
+Prec = 72.78% 
+average = 83.33% 
+
+==========
+mu = 0.0040;a = 50.0000; nu = 0.0200; lambda = 80.0000; 
+Recall rate = 84.33% 
+Prec = 74.44% 
+average = 79.39% 
+
+==========
+mu = 0.0040;a = 50.0000; nu = 0.0250; lambda = 40.0000; 
+Recall rate = 94.11% 
+Prec = 66.88% 
+average = 80.50% 
+
+==========
+mu = 0.0040;a = 50.0000; nu = 0.0250; lambda = 80.0000; 
+Recall rate = 86.22% 
+Prec = 69.29% 
+average = 77.75% 
+
+==========
+mu = 0.0040;a = 50.0000; nu = 0.0300; lambda = 40.0000; 
+Recall rate = 93.00% 
+Prec = 65.82% 
+average = 79.41% 
+
+==========
+mu = 0.0040;a = 50.0000; nu = 0.0300; lambda = 80.0000; 
+Recall rate = 80.56% 
+Prec = 61.19% 
+average = 70.87% 
+
+==========
+mu = 0.0050;a = 50.0000; nu = 0.0200; lambda = 40.0000; 
+Recall rate = 92.78% 
+Prec = 70.31% 
+average = 81.55% 
+
+==========
+mu = 0.0050;a = 50.0000; nu = 0.0200; lambda = 80.0000; 
+Recall rate = 83.33% 
+Prec = 70.91% 
+average = 77.12% 
+
+==========
+mu = 0.0050;a = 50.0000; nu = 0.0250; lambda = 40.0000; 
+Recall rate = 94.78% 
+Prec = 72.55% 
+average = 83.66% 
+
+==========
+mu = 0.0050;a = 50.0000; nu = 0.0250; lambda = 80.0000; 
+Recall rate = 85.89% 
+Prec = 73.62% 
+average = 79.75% 
+
+==========
+mu = 0.0050;a = 50.0000; nu = 0.0300; lambda = 40.0000; 
+Recall rate = 94.44% 
+Prec = 68.71% 
+average = 81.58% 
+
+==========
+mu = 0.0050;a = 50.0000; nu = 0.0300; lambda = 80.0000; 
+Recall rate = 86.44% 
+Prec = 69.94% 
+average = 78.19% 
+
+==========
+mu = 0.0060;a = 50.0000; nu = 0.0200; lambda = 40.0000; 
+Recall rate = 91.67% 
+Prec = 66.49% 
+average = 79.08% 
+
+==========
+mu = 0.0060;a = 50.0000; nu = 0.0200; lambda = 80.0000; 
+Recall rate = 79.56% 
+Prec = 65.56% 
+average = 72.56% 
+
+==========
+mu = 0.0060;a = 50.0000; nu = 0.0250; lambda = 40.0000; 
+Recall rate = 94.00% 
+Prec = 70.34% 
+average = 82.17% 
+
+==========
+mu = 0.0060;a = 50.0000; nu = 0.0250; lambda = 80.0000; 
+Recall rate = 84.00% 
+Prec = 70.70% 
+average = 77.35% 
+
+==========
+mu = 0.0060;a = 50.0000; nu = 0.0300; lambda = 40.0000; 
+Recall rate = 94.67% 
+Prec = 72.33% 
+average = 83.50% 
+
+==========
+mu = 0.0060;a = 50.0000; nu = 0.0300; lambda = 80.0000; 
+Recall rate = 86.56% 
+Prec = 72.95% 
+average = 79.75% 
+
+==========
+mu = 0.0045;a = 50.0000; nu = 0.0230; lambda = 40.0000; 
+Recall rate = 94.33% 
+Prec = 73.54% 
+average = 83.94% 
+
+==========
+mu = 0.0045;a = 50.0000; nu = 0.0240; lambda = 40.0000; 
+Recall rate = 94.56% 
+Prec = 74.19% 
+average = 84.37% 
+
+==========
+mu = 0.0045;a = 50.0000; nu = 0.0250; lambda = 40.0000; 
+Recall rate = 94.33% 
+Prec = 72.87% 
+average = 83.60% 
+
+==========
+mu = 0.0045;a = 50.0000; nu = 0.0260; lambda = 40.0000; 
+Recall rate = 94.33% 
+Prec = 71.68% 
+average = 83.00% 
+
+==========
+mu = 0.0045;a = 50.0000; nu = 0.0270; lambda = 40.0000; 
+Recall rate = 94.44% 
+Prec = 69.20% 
+average = 81.82% 
+
+==========
+mu = 0.0050;a = 50.0000; nu = 0.0230; lambda = 40.0000; 
+Recall rate = 94.22% 
+Prec = 71.85% 
+average = 83.04% 
+
+==========
+mu = 0.0050;a = 50.0000; nu = 0.0240; lambda = 40.0000; 
+Recall rate = 94.22% 
+Prec = 71.58% 
+average = 82.90% 
+
+==========
+mu = 0.0050;a = 50.0000; nu = 0.0250; lambda = 40.0000; 
+Recall rate = 94.78% 
+Prec = 72.55% 
+average = 83.66% 
+
+==========
+mu = 0.0050;a = 50.0000; nu = 0.0260; lambda = 40.0000; 
+Recall rate = 94.56% 
+Prec = 73.65% 
+average = 84.10% 
+
+==========
+mu = 0.0050;a = 50.0000; nu = 0.0270; lambda = 40.0000; 
+Recall rate = 94.44% 
+Prec = 73.19% 
+average = 83.82% 
+
+==========
+mu = 0.0055;a = 50.0000; nu = 0.0230; lambda = 40.0000; 
+Recall rate = 93.78% 
+Prec = 70.82% 
+average = 82.30% 
+
+==========
+mu = 0.0055;a = 50.0000; nu = 0.0240; lambda = 40.0000; 
+Recall rate = 94.11% 
+Prec = 71.44% 
+average = 82.78% 
+
+==========
+mu = 0.0055;a = 50.0000; nu = 0.0250; lambda = 40.0000; 
+Recall rate = 94.44% 
+Prec = 71.59% 
+average = 83.02% 
+
+==========
+mu = 0.0055;a = 50.0000; nu = 0.0260; lambda = 40.0000; 
+Recall rate = 94.33% 
+Prec = 71.66% 
+average = 83.00% 
+
+==========
+mu = 0.0055;a = 50.0000; nu = 0.0270; lambda = 40.0000; 
+Recall rate = 94.44% 
+Prec = 72.13% 
+average = 83.29% 
