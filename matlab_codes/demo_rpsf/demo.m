@@ -7,7 +7,8 @@ L = 4; Nzones = 7;
 % nSource = 5;
 
 datestring = datestr(now,'yyyymmddHH');
-base_path = ['../../../data_test_var_',datestring,'/test',num2str(nSource)]; % save path
+base_path = ['../../../data_test/test',num2str(nSource)]; % save path
+% base_path = ['../../../data_test_var_',datestring,'/test',num2str(nSource)]; % save path
 % train_path = [base_path,'train/'];  % path to save train images with noise
 % clean_path = [base_path,'clean/']; % path to save noiseless ground truth images
 train_path = base_path;  % path to save train images with noise
@@ -47,7 +48,8 @@ label_file = fopen([train_path,'/label.txt'],'w');
 
 for nt = 1: N_test % flux test using 49
     fprintf('Test %d\n',nt)
-    rng('shuffle');
+    rng(150*nt);
+%   rng('shuffle');
 %% ground true and observed image not on grid point
     real_pos = zeros(nSource, 3);
     %%-------------- small region--------------------
@@ -101,14 +103,22 @@ for nt = 1: N_test % flux test using 49
         case 2
     %% IRL1-nonconvex
         Alg = 'KL-NC';
-        if nSource == 30 || nSource == 35
-            mu = 0.0100;a = 50.0000; nu = 0.0150; lambda = 40.0000; 
-        elseif nSource == 40 || nSource == 45
-            mu = 0.005;a = 50.0000; nu = 0.0250; lambda = 40.0000;
-        elseif nSource == 15 || nSource == 20 || nSource == 25
+        if nSource == 45
+            mu = 0.0045;a = 50.0000; nu = 0.0240; lambda = 40.0000;
+        elseif nSource == 40 %paper
+            mu = 0.005;a = 50.0000; nu = 0.0250; lambda = 40.0000; 
+        elseif nSource == 35
+            mu = 0.0046;a = 50.0000; nu = 0.0250; lambda = 40.0000; 
+        elseif nSource == 30 %paper
+            mu = 0.010;a = 50.0000; nu = 0.0150; lambda = 40.0000; 
+        elseif nSource == 25
+            mu = 0.006;a = 80.0000; nu = 0.0300;lambda = 80.0000;
+        elseif nSource == 20 
+            mu = 0.010;a = 80.0000; nu = 0.0150;lambda = 80.0000;
+        elseif nSource == 15 %paper
             mu = 0.0015;a = 80.0000; nu = 0.0300;lambda = 120.0000;
-        else
-           mu = 0.0011;a = 80.0000; nu = 0.0400;lambda = 140.0000; % 5 & 10
+        else %paper
+            mu = 0.0011;a = 80.0000; nu = 0.0400;lambda = 140.0000; % 5 & 10 
         end
         u1 = IRL1_poisson_steplength(g,A,b,a, mu,nu,lambda);
         case 3
