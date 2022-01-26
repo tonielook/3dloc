@@ -2,12 +2,12 @@
 % clear; close all
 global   Np L Nzones nSource
 L = 4; % pupil radius = #R aperture plane side length (in units of aperture radius), > 2
-Nzones = 7; % no. of zones in the circular imaging aperture = #L
+Nzones = 5; % no. of zones in the circular imaging aperture = #L
 Np = 96;
 
 %% Modify path and params
 % Ntest  = [0,1];
-Ntest  = [1,11000];
+Ntest  = [1,10000];
 
 base_path = '../../data_train/'; % save path
 train_path = [base_path,'train/'];  % path to save train images with noise
@@ -21,7 +21,7 @@ end
 
 % nSource is a ranbudom value uniformly distributed in [1,40]
 rng('shuffle');
-    nSource = 70;
+    nSource = 50;
 % all_nSource = randi([1,40],[Ntest(2),1]);
 all_nSource = [];
 all_photon = [];
@@ -32,7 +32,7 @@ all_overlap = [];
 %% generate images
 datestring = datestr(now,'yymmddHH');
 labelfilebak = ['../../data_train/train/label_',datestring,'.txt']
-copyfile ('../../data_train/train/label.txt',labelfilebak);
+% copyfile ('../../data_train/train/label.txt',labelfilebak);
 
 label_file = fopen([train_path,'label.txt'],'w');
 for ii = Ntest(1):Ntest(2)

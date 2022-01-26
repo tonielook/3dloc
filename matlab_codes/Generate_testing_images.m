@@ -2,7 +2,7 @@
 % clear; close all
 global   Np L Nzones nSource
 L = 4; % pupil radius = #R aperture plane side length (in units of aperture radius), > 2
-Nzones = 7; % no. of zones in the circular imaging aperture = #L
+Nzones = 5; % no. of zones in the circular imaging aperture = #L
 Np = 96;
 
 %% Modify path and params

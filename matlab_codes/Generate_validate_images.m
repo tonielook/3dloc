@@ -1,5 +1,5 @@
 %% Generate train images
-% clear; close all
+ clear; close all
 global   Np L Nzones nSource
 L = 4; % pupil radius = #R aperture plane side length (in units of aperture radius), > 2
 Nzones = 7; % no. of zones in the circular imaging aperture = #L
@@ -7,7 +7,7 @@ Np = 96;
 
 %% Modify path and params
 % Ntest  = [0,1];
-Ntest  = [15002,15003];
+Ntest  = [15007,15007];
 
 base_path = '../../data_train/'; % save path
 train_path = [base_path,'train/'];  % path to save train images with noise
@@ -21,7 +21,7 @@ end
 
 % nSource is a ranbudom value uniformly distributed in [1,40]
 rng('shuffle');
-    nSource = 100;
+    nSource = 5;
 % all_nSource = randi([1,40],[Ntest(2),1]);
 all_nSource = [];
 all_photon = [];
@@ -32,10 +32,10 @@ all_overlap = [];
 %% generate images
 label_file = fopen([train_path,'label_val.txt'],'w');
 for ii = Ntest(1):Ntest(2)
-    rng('shuffle');
+    rng(1);
 %     nSource = all_nSource(ii+1);
     overlap_pts = min(randi([1,4]),floor(nSource/2));
-%     overlap_pts = 0;
+    overlap_pts = 0;
     all_overlap = [all_overlap,overlap_pts];
 
     Xp_true = 34*2*(rand(1,nSource-overlap_pts)-0.5);
@@ -92,7 +92,7 @@ fclose(label_file);
 %% save all_flux, all_nSource, all_nSource_v1
 save([base_path,'photons.mat'],'all_photon');
 save([base_path,'flux.mat'],'all_flux');
-save([base_path,'nSource.mat'],'all_nSource');[0]
+save([base_path,'nSource.mat'],'all_nSource');
 save([base_path,'depth.mat'],'all_depth');
 save([base_path,'overlap.mat'],'all_overlap');
 
@@ -103,11 +103,15 @@ save([base_path,'overlap.mat'],'all_overlap');
 % figure; histogram(all_nSource); title('nSource');
 % figure; histogram(all_overlap); title('num of overlap points');
 
-imagesc(imrotate(flip(I0,2),90));
 
 %% visualize 3d plot
-% figure;
-% plot3(Xp_true,Yp_true,zeta_true,'o');
+close all;
+figure;
+scatter3(Xp_true+49,Yp_true+49,(zeta_true+21)/2.1+1,'ro');
+hold on
+axis([1 96 1 96 0 21]);
+title(['Nzones: ',num2str(Nzones)])
+
 % xlabel('y')
 % ylabel('x')
 % zlabel('zeta')
@@ -117,6 +121,7 @@ imagesc(imrotate(flip(I0,2),90));
 % ax = gca;
 % ax.YDir = 'reverse';
 % grid on
+imagesc(imrotate(flip(I0,2),90));
 
 
 
