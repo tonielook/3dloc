@@ -46,7 +46,7 @@ Flux_ref = 0;
 
 label_file = fopen([train_path,'/label.txt'],'w');
 
-for nt = 26 % flux test using 49
+for nt = 8 % flux test using 49
     fprintf('Test %d\n',nt)
     rng(150*nt);
 %   rng('shuffle');
@@ -190,42 +190,15 @@ end
 
 fclose(label_file);
 
-mean_recall=mean(recall);
-mean_precision=mean(precision);
-mean_time=mean(time);
-
-% dlmwrite('../../../test_output/var/result_var.csv',{N_test,nSource,mean_precision,mean_recall,mean_time},'delimiter',',','-append');
-
-
-% %% plot the 3D estimation (compare ground true with estimated solution)
-% [loc_x_tp,loc_y_tp,loc_z_tp] = ind2sub(size(A),intersect(tp_pred,find(xIt>0))); 
-% [loc_x_fp,loc_y_fp,loc_z_fp] = ind2sub(size(A),setxor(tp_pred,find(xIt>0))); 
-% 
-% figure;
-% % true positive - gt
-% scatter3(Vtrue(tp_gt)+49,Vtrue(nSource+tp_gt)+49,(Vtrue(2*nSource+tp_gt)+21)/2.1+1,'ko')
-% hold on
-% % false negative - gt
-% fn_gt = setxor(1:1:nSource,tp_gt);
-% scatter3(Vtrue(fn_gt)+49,Vtrue(nSource+fn_gt)+49,(Vtrue(2*nSource+fn_gt)+21)/2.1+1,'ro')
-% hold on
-% % true positive - pred
-% scatter3(loc_x_tp,loc_y_tp,loc_z_tp,'k^')
-% hold on
-% % false positive - pred
-% scatter3(loc_x_fp,loc_y_fp,loc_z_fp,'r^')
-% 
-% axis([1 96 1 96 0 21])
-% legend('tp-gt','fn-gt','tp-p','fp-p','Location','Southoutside','Orientation','horizontal')
-% % imagesc(I0.')
-% title(['img',num2str(nt)])
-% 
-% load ([base_path,'/I',num2str(nt),'.mat'])
-% imagesc(imrotate(flip(I0,2),90))
-
-%% Histogram on flux estimation 
-% opt = 1; 
-% opt = 1: plot the relative error in flux wrt histogram 
-% opt = 2: plot the estimated and true value of flux  wrt histogram
-% plot_flux_hisg(flux_total, opt)
-% save('flux_15KL-L2.mat','flux_total','nSource','Alg');
+% visualize 3d plot
+figure;
+plot3(Xp_true,Yp_true,zeta_true,'o');
+xlabel('y')
+ylabel('x')
+zlabel('zeta')
+xlim([-48 48])
+ylim([-48 48])
+zlim([-20 20])
+ax = gca;
+ax.YDir = 'reverse';
+grid on

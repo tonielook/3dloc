@@ -2,22 +2,22 @@
 load('data_natural_order_A'); % Single role
 global Np nSource L Nzones
 L = 4; Nzones = 7; b = 5; [Nx,Ny,Nz] = size(A); Np = Nx;
-nSource = 10; zmax = 20;
+nSource = 40; zmax = 20;
 
 % Read Ground-truth Label and Prediction
-mat_path = 'F:\Tmp\0118_Evalution_with_Float\testset';
-mat_path = fullfile(mat_path,['test',num2str(nSource)]);
-pred_path = 'F:\Tmp\0118_Evalution_with_Float\HS';
-pred_path = fullfile(pred_path,['test',num2str(nSource)]);
+base_path = 'F:\Tmp\0118_Evalution_with_Float';
 
-pred = readtable(fullfile(pred_path,'loc.csv'));
-pred = table2array(pred(:,2:6));
-% pred = table2array(pred);
+mat_path = fullfile(base_path,'testset',['test',num2str(nSource)]);
+
+pred_path = fullfile(base_path,'var',['var_',num2str(nSource),'.csv']);
+pred = table2array(readtable(pred_path));
+pred(:,[2 3 6 7]) = pred(:,[3 2 7 6]);
 % Due to Problem in Post-pro of CNN, xy-0.5/2=0.25, z-0.5*0.172=0.086
 % pred(:,2:3) = pred(:,2:3)-0.25;
 % pred(:,4) = pred(:,4)-0.086;
 
-gt = readtable(fullfile(pred_path,'label.txt'));
+gt_path = fullfile(base_path,'var',['label_',num2str(nSource),'.txt']);
+gt = readtable(gt_path);
 gt = table2array(gt(:,1:5));
 
 % Initialize Evaluation Metrics
@@ -29,29 +29,28 @@ initial_pred_pts = zeros();
 flux_all = [];
 
 % Save pred_label.csv & eval.csv or NOT
-view = 1;
-save_pred_info = 0;
+view = 0;
+save_pred_info = 1;
 save_path = pred_path;
 if save_pred_info
-    label = fopen(fullfile(save_path, 'pred_label.csv'), 'w');
-    eval = fopen(fullfile(save_path, 'eval_v1.csv'), 'w');
+    eval = fopen(fullfile(base_path,'var',['eval_v3_',num2str(nSource),'.csv']), 'w');
 end
 
 %% Post-pro
 tic
-for nt = 56
+for nt = 1:100
     gt_tmp = gt(gt(:,1)==nt,:);
     pred_tmp = pred(pred(:,1)==nt,:);
 
     if view
         % View Initial Prediction
         figure(1)
-        plot3(gt_tmp(:,2),gt_tmp(:,3),gt_tmp(:,4),'ro', pred_tmp(:,2),pred_tmp(:,3),pred_tmp(:,4),'bx');
-        title(sprintf('Initial Prediction %d', nt))
+        plot3(gt_tmp(:,2),gt_tmp(:,3),gt_tmp(:,4),'ro', pred_tmp(:,2)-49,pred_tmp(:,3)-49,(pred_tmp(:,4)-1)*2.1-21,'bx');
+        title(sprintf('Prediction to Grid %d', nt))
         axis([-Np/2 Np/2 -Np/2 Np/2 -zmax zmax]); grid on
-%         pause(0.5)
+        pause(0.5)
     end
-
+    
     % Load Ground Truth 3D Grid
     interest_reg = zeros(32,nSource); 
     Vtrue = [gt_tmp(:,2);gt_tmp(:,3);gt_tmp(:,4);gt_tmp(:,5)];
@@ -66,45 +65,29 @@ for nt = 56
     end
     
     % Load Initial Prediction
-    Vpred = [pred_tmp(:,2);pred_tmp(:,3);pred_tmp(:,4);pred_tmp(:,5)];
-    pred_vol = zeros(size(A));
-    nPred = length(Vpred)/4;
+    xIt=zeros(size(A)); elx=zeros(size(A)); ely=zeros(size(A)); elz=zeros(size(A));
+    nPred = size(pred_tmp,1);
     for i = 1 : nPred
-        xlow = round(49+Vpred(i)); 
-        ylow = round(49+Vpred(i+nPred));
-        zlow = round((Vpred(i+2*nPred)+21)/2.1)+1;
-        pred_vol(xlow,ylow,zlow)= pred_vol(xlow,ylow,zlow)+Vpred(i+3*nPred);
+        xlow = pred_tmp(i,2); 
+        ylow = pred_tmp(i,3);
+        zlow = pred_tmp(i,4);
+        xIt(xlow,ylow,zlow)= xIt(xlow,ylow,zlow)+pred_tmp(i,5);
+        elx(xlow,ylow,zlow) = pred_tmp(i,6);
+        ely(xlow,ylow,zlow) = pred_tmp(i,7);
+        elz(xlow,ylow,zlow) = pred_tmp(i,7);
     end
 
-    initial_pred_pts(nt) = numel(find(pred_vol>0));
-    if view
-        % View Initial Prediction to Grid
-        figure(2)
-        [xx,yy,zz] = ind2sub(size(A), find(pred_vol>0));
-        plot3(floor(gt_tmp(:,2)+49), floor(gt_tmp(:,3)+49), floor((gt_tmp(:,4)+21)/2.1+1), 'ro', xx, yy, zz, 'bx');
-        title(sprintf('Initial Prediction to Grid %d',nt));
-        axis([0 Np+1 0 Np+1 0 21]); grid on;
-%         pause(0.5)
-    end
-    
-    % Removing Clustered False Positive 
-    [xIt, elx, ely, elz] = local_3Dmax_large(pred_vol);
-    
     idx_est = find(xIt>0); 
     if isempty(idx_est)
         continue
     end
-    
     flux_est_dnn = xIt(idx_est);
-    % Refinment on Estimation of Flux
-%     load(fullfile(mat_path,['im',num2str(nt),'.mat']));  % mat file for g
-%     flux_est_var = Iter_flux(A, idx_est, g, b);
 
     %% Evaluation
     num_gt = nSource; num_pred = length(idx_est);
-    [num_tr,tp_pred,tp_gt,flux_total] = evaluation(xIt, interest_reg, flux_est_dnn, flux_gt);
+%     [num_tr,tp_pred,tp_gt,flux_total] = evaluation(xIt, interest_reg, flux_est_dnn, flux_gt);
 %     [num_tr,tp_pred,tp_gt,flux_total] = evaluation_v2(xIt, interest_reg, flux_est_dnn, flux_gt,nSource);
-%     [num_tr,tp_pred,tp_gt,flux_total] = evaluation_v3(gt_tmp(:,2:5),xIt,elx,ely,elz,flux_est_dnn);
+    [num_tr,tp_pred,tp_gt,flux_total] = evaluation_v3(gt_tmp(:,2:5),xIt,elx,ely,elz,flux_est_dnn);
 
     re = num_tr/num_gt;
     pr = num_tr/num_pred; 
@@ -147,17 +130,14 @@ for nt = 56
     
     %% Save pred_label.csv & eval.csv
     if save_pred_info
-        LABEL = [nt*ones(1,length(xx))', xx, yy, zz, flux_total(2,:)', sx, sy, sz];
-        fprintf(label, '%d,%.4f,%.4f,%.4f,%.4f\n', LABEL);
-        
-        EVAL = [nt, re, pr, ji, f1];
+        EVAL = [nt, pr, re, ji, f1];
         fprintf(eval, '%d,%.4f,%.4f,%.4f,%.4f\n', EVAL);
     end
     
     %% View
     if view
         % View Final Prediction After Post-pro - Est int
-%         load(fullfile(mat_path,['I',num2str(nt),'.mat']));
+        load(fullfile(mat_path,['I',num2str(nt),'.mat']));
         fn_gt = setxor(1:1:nSource,tp_gt);
         figure(3);
         plot3(Vtrue(tp_gt)+49,Vtrue(nSource+tp_gt)+49,(Vtrue(2*nSource+tp_gt)+21)/2.1+1,'ro',...
@@ -171,8 +151,8 @@ for nt = 56
             legend('TP-GT','FN-GT','TP-EST','FP-EST','Location','Southoutside','Orientation','horizontal')
         end
         title(sprintf('Result After Postpro (Est int) %d',nt))
-%         hold on; imagesc(I0); hold off
-%         pause(0.5)
+        hold on; imagesc(I0); hold off
+        pause(0.5)
 
         % View Final Prediction After Post-pro Est float
         fn_gt = setxor(1:1:nSource,tp_gt);
@@ -207,7 +187,6 @@ toc
 
 %% Save Info
 if save_pred_info
-    fclose(label);
     fclose(eval);
 end
 

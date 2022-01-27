@@ -3,6 +3,7 @@
 load('data_natural_order_A'); % Single role
 global Np nSource L Nzones
 L = 4; Nzones = 7; b = 5; [Nx,Ny,Nz] = size(A); Np = Nx;
+zmax = 20;						
 
 tic
 %% Modify parameters here
@@ -47,11 +48,11 @@ for nt = 1:testsize
 
     % load ground truth 3d grid
     interest_reg = zeros(32,nSource); 
-    Vtrue = [gt_tmp(:,3);gt_tmp(:,2);gt_tmp(:,4);gt_tmp(:,5)];
+    Vtrue = [gt_tmp(:,2);gt_tmp(:,3);gt_tmp(:,4);gt_tmp(:,5)];
     flux_gt = gt_tmp(:,5);
     for i = 1 : nSource
         x0 = zeros(size(A));
-        xlow = floor(49+Vtrue(i)); 
+        xlow = floor(49+Vtrue(i));
         ylow = floor(49+Vtrue(i+nSource));
         zlow = floor((Vtrue(i+2*nSource)+21)/2.1)+1;
         x0(xlow-1:xlow+2,ylow-1:ylow+2,zlow:zlow+1)= Vtrue(i+3*nSource);
@@ -59,13 +60,13 @@ for nt = 1:testsize
     end
     
     % load initial prediction
-    Vpred = [pred_tmp(:,3);pred_tmp(:,2);pred_tmp(:,4);pred_tmp(:,5)];
+    Vpred = [pred_tmp(:,2);pred_tmp(:,3);pred_tmp(:,4);pred_tmp(:,5)];
     pred_vol = zeros(size(A));
     nPred = length(Vpred)/4;
     for i = 1 : nPred
-        xlow = min(round(49+Vpred(i)),96); 
-        ylow = min(round(49+Vpred(i+ nPred)),96);
-        zlow = min(round((Vpred(i+2*nPred)+21)/2.1)+1,20);
+        xlow = round(49+Vpred(i)); 
+        ylow = round(49+Vpred(i+nPred));
+        zlow = round((Vpred(i+2*nPred)+21)/2.1)+1;
         pred_vol(xlow,ylow,zlow)= pred_vol(xlow,ylow,zlow)+Vpred(i+3*nPred);
     end
 
@@ -80,16 +81,19 @@ for nt = 1:testsize
     end
     
     flux_est_dnn = xIt(idx_est);
-    
-    % Estimate flux value
-    load([mat_path,'/im',num2str(nt),'.mat']);  % mat file for g
-    flux_est_var = Iter_flux(A, idx_est, g, b);
+    % Refinment on Estimation of Flux
+						 
+     load(fullfile(mat_path,['im',num2str(nt),'.mat']));  % mat file for g
+%     flux_est_var = Iter_flux(A, idx_est, g, b);
 
     %% Evaluation
     num_gt = nSource; num_pred = length(idx_est);
-    [num_tr,tp_pred,tp_gt,flux_total] = evaluation(xIt, interest_reg, flux_est_var, flux_gt); 
+%     [num_tr,tp_pred,tp_gt,flux_total] = evaluation(xIt, interest_reg, flux_est_dnn, flux_gt);
+%     [num_tr,tp_pred,tp_gt,flux_total] = evaluation_v2(xIt, interest_reg, flux_est_dnn, flux_gt,nSource);
+     [num_tr,tp_pred,tp_gt,flux_total] = evaluation_v3(gt_tmp(:,2:5),xIt,elx,ely,elz,flux_est_dnn);
+																								
 
-    re =  num_tr/num_gt;
+    re = num_tr/num_gt;
     pr = num_tr/num_pred; 
     ji = num_tr/(num_gt + num_pred - num_tr);
     f1 = 2*(re*pr)/(re+pr);
@@ -98,12 +102,13 @@ for nt = 1:testsize
     precision(nt) = pr;
     jaccard_index(nt) = ji;
     f1_score(nt) = f1;
-   
-%     fprintf('TP = %d, P = %d, Target = %d\n',num_tr,num_pred,num_nonz);    
-    fprintf('%d\n',nt)
-    fprintf('%d point source case\n',nSource);
-    fprintf('Recall = %3.2f%%\n',recall(nt)*100);
-    fprintf('Precision = %3.2f%%\n',precision(nt)*100);
+    
+    fprintf('Image %d in %d point source case\n', nt,nSource)
+    fprintf('TP = %d, Pred = %d, GT = %d\n',num_tr,num_pred,num_gt);    
+					  
+											  
+												 
+    fprintf('Recall = %3.2f%%, Precision = %3.2f%%\n',recall(nt)*100,precision(nt)*100);
     fprintf('---\n');
 
     % save hard samples if recall < 0.95
@@ -128,34 +133,72 @@ for nt = 1:testsize
        dlmwrite('../../data_train/hardsamples/summary.csv',{str2num(datestring),testsize,nSource,str2num(hsfileidx),re},'precision',16,'delimiter',',','-append');
     end
 
-    %% save pred_label.txt
+   
+    %% Save Results
+    % TP
+    [xxtp,yytp,zztp] = ind2sub(size(A), tp_pred); 
+    sxtp = zeros(length(xxtp),1);  sytp = zeros(length(xxtp),1); sztp = zeros(length(xxtp),1);
+    for sidx = 1: length(xxtp)
+        tx = xxtp(sidx); ty = yytp(sidx); tz = zztp(sidx);
+        sxtp(sidx) = elx(tx, ty, tz);
+        sytp(sidx) = ely(tx, ty, tz);
+        sztp(sidx) = elz(tx, ty, tz);
+    end
+
+    % FP
+    [xxfp,yyfp,zzfp] = ind2sub(size(xIt), setxor(tp_pred, find(xIt>0)));
+    sxfp = zeros(length(xxfp), 1);  syfp = zeros(length(xxfp), 1); szfp = zeros(length(xxfp), 1);
+    for sidx = 1: length(xxfp)
+        tx = xxfp(sidx); ty = yyfp(sidx); tz = zzfp(sidx);
+        sxfp(sidx) = elx(tx, ty, tz);
+        syfp(sidx) = ely(tx, ty, tz);
+        szfp(sidx) = elz(tx, ty, tz);
+												 
+																												 
+																			   
+												 
+																			   
+																																								  
+    end
+
+    xx=[xxtp';xxfp]; yy=[yytp';yyfp]; zz=[zztp';zzfp];
+    sx=[sxtp;sxfp]; sy=[sytp;syfp]; sz=[sztp;szfp];
+    
+    %% Save pred_label.csv & eval.csv
     if save_pred_info
-        [loc_x,loc_y,loc_z] = ind2sub(size(A),find(xIt>0)); 
-        LABEL = [nt*ones(1,length(loc_x));loc_y'-49;loc_x'-49; loc_z'*2-21; flux_total(2,:)];
-        fprintf(label,'%d %6.4f %6.4f %6.4f %6.4f \n',LABEL);
+        LABEL = [nt*ones(1,length(xx))', xx, yy, zz, flux_total(2,:)', sx, sy, sz];
+        fprintf(label, '%d,%.4f,%.4f,%.4f,%.4f\n', LABEL);
+        
+        EVAL = [nt, re, pr, ji, f1];
+        fprintf(eval, '%d,%.4f,%.4f,%.4f,%.4f\n', EVAL);
     end
 end
 
-%% display mean evaluation metrics
+%% Display Mean Evaluation Metrics
 mean_precision = mean(precision);
 mean_recall = mean(recall);
 mean_jaccard = mean(jaccard_index);
 mean_f1_score = mean(f1_score);
-fprintf('test%d,\nprecision=%.4f, recall=%.4f, jaccard=%.4f, f1 socre=%.4f\n',nSource,mean_precision,mean_recall,mean_jaccard,mean_f1_score);
+mean_num_pts = mean(initial_pred_pts);
+
+fprintf('Total %d Images in %d point source case\n',100,nSource);
+fprintf('Precision=%.2f%%, Recall=%.2f%%, Jaccard=%.2f%%, F1 socre=%.2f%% \n',...
+        mean_precision*100 ,mean_recall*100, mean_jaccard*100, mean_f1_score*100);
 toc
 mean(initial_pred_pts)
 
 %% save info
 if save_pred_info
     fclose(label);
-    % save precision and recall into csv
-    ex = [[1:1:testsize]',precision,recall,jaccard_index,f1_score];
-    writematrix(ex,[save_path,'/eval.csv']);
+										
+																   
+    fclose(eval);
 end
 
+
 %% plot the 3D estimation (compare ground true with estimated solution)
-[loc_x_tp,loc_y_tp,loc_z_tp] = ind2sub(size(A),intersect(tp_pred,find(xIt>0))); 
-[loc_x_fp,loc_y_fp,loc_z_fp] = ind2sub(size(A),setxor(tp_pred,find(xIt>0))); 
+%[loc_x_tp,loc_y_tp,loc_z_tp] = ind2sub(size(A),intersect(tp_pred,find(xIt>0))); 
+%[loc_x_fp,loc_y_fp,loc_z_fp] = ind2sub(size(A),setxor(tp_pred,find(xIt>0))); 
 
 % figure;
 % % true positive - gt
