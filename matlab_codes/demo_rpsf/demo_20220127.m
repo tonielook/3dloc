@@ -4,7 +4,7 @@
 load('data_natural_order_A'); % Single role 
 global   Np nSource L Nzones
 L = 4; Nzones = 7; 
-%nSource = 50;
+% nSource = 5;
 
 datestring = datestr(now,'yyyymmddHH');
 base_path = ['../../../data_test/test',num2str(nSource)]; % save path
@@ -45,8 +45,6 @@ Flux_ref = 0;
 %==================================================================
 
 label_file = fopen([train_path,'/label.txt'],'w');
-var_file = fopen(fullfile(train_path, sprintf('var_%d.csv',nSource)),'w');
-eval_file = fopen(fullfile(train_path, sprintf('eval_%d.csv',nSource)),'w');
 
 for nt = 1: N_test % flux test using 49
     fprintf('Test %d\n',nt)
@@ -158,33 +156,30 @@ for nt = 1: N_test % flux test using 49
    [xIt, elx, ely, elz] = local_3Dmax_large(u1);
     
 %% Iterative Scheme on refinment on estimation of flux & Evaluation
-    flux_est = xIt(xIt>0);
-%% Save Estimation
-    [xx,yy,zz] = ind2sub(size(A), find(xIt>0)); 
-    sx = zeros(length(xx),1);  sy = zeros(length(xx),1); sz = zeros(length(xx),1);
-    for sidx = 1: length(xx)
-        tx = xx(sidx); ty = yy(sidx); tz = zz(sidx);
-        sx(sidx) = elx(tx, ty, tz);
-        sy(sidx) = ely(tx, ty, tz);
-        sz(sidx) = elz(tx, ty, tz);
+    if Flux_ref == 1
+        idx_est = find(xIt>0); 
+        [flux_new] = Iter_flux(A, idx_est, g, b);
+        [re, pr,flux_tem, flux_est] = ...
+            Eval_v2(xIt, interest_reg,flux_new,flux); 
+    else 
+        [re, pr] = Eval_v1(xIt, interest_reg); % without flux refinement
     end
-    % without Flux
-    VAR = [nt*ones(length(xx),1), xx, yy, zz, flux_est, sx, sy, sz];
-    fprintf(var_file, '%d,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f,%.4f\n', VAR');
-    
-%% Evaluation 
-%     [re, pr,flux_total] = Eval_v2(xIt, interest_reg,flux_new,flux); 
-    [re, pr] = Eval_v1(xIt, interest_reg); % for process without flux refinement
-    
+%     flux_total = [flux_total flux_tem];
     recall(nt) = re;
     precision(nt) = pr;
-%     time_with_post_pro(nt) = toc;
+
     if recall(nt) == 0
         break;
     end
 
-    EVAL = [nt, pr, re];
-    fprintf(eval_file, '%d,%.4f,%.4f\n', EVAL);
+    [re_p, pr_p] = Eval_v1(u1, interest_reg); 
+    recall_p(nt) = re_p;
+    precision_p(nt) = pr_p;
+
+% %----------plot the flux comparison in estimated with ground truth------
+% plot_flux_1case(flux_est) 
+% %---------------------------------------------------------------------- 
+
     fprintf('%s in %d point source case\n',Alg,nSource);
     fprintf('Recall = %3.2f%%\n',recall(nt)*100);
     fprintf('Precision = %3.2f%%\n',precision(nt)*100);
@@ -194,13 +189,12 @@ for nt = 1: N_test % flux test using 49
 end
 
 fclose(label_file);
-fclose(var_file);
-fclose(eval_file);
-%mean_recall=mean(recall);
-%mean_precision=mean(precision);
-%mean_time=mean(time);
 
-%dlmwrite('../../../test_output/var/result_var.csv',{N_test,nSource,mean_precision,mean_recall,mean_time},'delimiter',',','-append');
+mean_recall=mean(recall);
+mean_precision=mean(precision);
+mean_time=mean(time);
+
+dlmwrite('../../../test_output/var/result_var.csv',{N_test,nSource,mean_precision,mean_recall,mean_time},'delimiter',',','-append');
 
 
 

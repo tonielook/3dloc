@@ -2,21 +2,22 @@
 load('data_natural_order_A'); % Single role
 global Np nSource L Nzones
 L = 4; Nzones = 7; b = 5; [Nx,Ny,Nz] = size(A); Np = Nx;
-nSource = 40; zmax = 20;
+%nSource = 50; 
+zmax = 20;
 
 % Read Ground-truth Label and Prediction
-base_path = 'F:\Tmp\0118_Evalution_with_Float';
+base_path = '../../../';
 
-mat_path = fullfile(base_path,'testset',['test',num2str(nSource)]);
+mat_path = fullfile(base_path,'data_test',['test',num2str(nSource)]);
 
-pred_path = fullfile(base_path,'var',['var_',num2str(nSource),'.csv']);
+pred_path = fullfile(mat_path,['var_',num2str(nSource),'.csv']);
 pred = table2array(readtable(pred_path));
 pred(:,[2 3 6 7]) = pred(:,[3 2 7 6]);
 % Due to Problem in Post-pro of CNN, xy-0.5/2=0.25, z-0.5*0.172=0.086
 % pred(:,2:3) = pred(:,2:3)-0.25;
 % pred(:,4) = pred(:,4)-0.086;
 
-gt_path = fullfile(base_path,'var',['label_',num2str(nSource),'.txt']);
+gt_path = fullfile(mat_path,['label.txt']);
 gt = readtable(gt_path);
 gt = table2array(gt(:,1:5));
 
@@ -30,7 +31,7 @@ flux_all = [];
 
 % Save pred_label.csv & eval.csv or NOT
 view = 0;
-save_pred_info = 1;
+save_pred_info = 0;
 save_path = pred_path;
 if save_pred_info
     eval = fopen(fullfile(base_path,'var',['eval_v3_',num2str(nSource),'.csv']), 'w');
@@ -184,6 +185,7 @@ fprintf('Total %d Images in %d point source case\n',100,nSource);
 fprintf('Precision=%.2f%%, Recall=%.2f%%, Jaccard=%.2f%%, F1 socre=%.2f%% \n',...
         mean_precision*100 ,mean_recall*100, mean_jaccard*100, mean_f1_score*100);
 toc
+dlmwrite('../../../test_output/result_var.csv',{nSource,mean_precision,mean_recall},'delimiter',',','-append');
 
 %% Save Info
 if save_pred_info

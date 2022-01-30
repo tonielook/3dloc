@@ -64,9 +64,9 @@ for nt = 1:testsize
     pred_vol = zeros(size(A));
     nPred = length(Vpred)/4;
     for i = 1 : nPred
-        xlow = round(49+Vpred(i)); 
-        ylow = round(49+Vpred(i+nPred));
-        zlow = round((Vpred(i+2*nPred)+21)/2.1)+1;
+        xlow = min(round(49+Vpred(i)),96); 
+        ylow = min(round(49+Vpred(i+ nPred)),96);
+        zlow = min(round((Vpred(i+2*nPred)+21)/2.1)+1,20);
         pred_vol(xlow,ylow,zlow)= pred_vol(xlow,ylow,zlow)+Vpred(i+3*nPred);
     end
 

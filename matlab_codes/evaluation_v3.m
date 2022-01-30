@@ -25,7 +25,9 @@ tp_pred = []; tp_gt = [];
 i=1;
 while num_nonz>0
     dist = abs(est(:,2:4)-gt(i,2:4));
-    tem = ((dist(:,1)<=2)+(dist(:,2)<=2)+(dist(:,3)<=2))==3;
+%    tem = ((dist(:,1)<=2)+(dist(:,2)<=2)+(dist(:,3)<=2))==3;
+%    tem = ((dist(:,1)<=1.5)+(dist(:,2)<=1.5)+(dist(:,3)<=3))==3;
+     tem = ((sqrt(dist(:,1).^2+dist(:,2).^2+(dist(:,3)/2).^2))<=2)==1;
     if sum(tem)>1 && i<num_nonz
         i=i+1;
         continue
