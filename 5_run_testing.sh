@@ -1,11 +1,14 @@
 #!/bin/bash
 set -x
-# declare -a cps=("012717-nTrain9905-lr0.001-Epoch190-batchSize10-D250-cnn_residual/checkpoint_best_loss" 
-#                 "121515-nTrain9000-lr0.001-Epoch190-batchSize10-D250-cnn_residual/checkpoint_best_loss" 
-# )
+declare -a cps=("121515-nTrain9000-lr0.001-Epoch190-batchSize10-D250-cnn_residual/checkpoint_best_loss"
+                "012717-nTrain9905-lr0.001-Epoch190-batchSize10-D250-cnn_residual/checkpoint_best_loss" 
+                "012913-nTrain10851-lr0.001-Epoch190-batchSize10-D250-cnn_residual/checkpoint_best_loss" 
+                "123012-nTrain9900-lr0.001-Epoch190-batchSize10-D250-cnn_residual/checkpoint_best_loss"
+
+)
 # pts=(5 25 45)
 
-declare -a cps=("012913-nTrain10851-lr0.001-Epoch190-batchSize10-D250-cnn_residual/checkpoint_best_loss")
+# declare -a cps=("020312-nTrain11457-lr0.001-Epoch190-batchSize10-D250-cnn_residual/checkpoint_best_loss")
 pts=(5 10 15 20 25 30 35 40 45)
 # pts=(40)
 
