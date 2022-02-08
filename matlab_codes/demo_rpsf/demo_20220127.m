@@ -1,14 +1,14 @@
-clear;
+% clear; close all
 % 1000 photos case
 
 load('data_natural_order_A'); % Single role 
 global   Np nSource L Nzones
 L = 4; Nzones = 7; 
-nSource = 40;
+% nSource = 5;
 
 datestring = datestr(now,'yyyymmddHH');
-% base_path = ['../../../data_test/test',num2str(nSource)]; % save path
-base_path = ['../../../data_test_var_',datestring,'/test',num2str(nSource)]; % save path
+base_path = ['../../../data_test/test',num2str(nSource)]; % save path
+% base_path = ['../../../data_test_var_',datestring,'/test',num2str(nSource)]; % save path
 % train_path = [base_path,'train/'];  % path to save train images with noise
 % clean_path = [base_path,'clean/']; % path to save noiseless ground truth images
 train_path = base_path;  % path to save train images with noise
@@ -46,7 +46,7 @@ Flux_ref = 0;
 
 label_file = fopen([train_path,'/label.txt'],'w');
 
-for nt = 8 % flux test using 49
+for nt = 1: N_test % flux test using 49
     fprintf('Test %d\n',nt)
     rng(150*nt);
 %   rng('shuffle');
@@ -190,15 +190,17 @@ end
 
 fclose(label_file);
 
-% visualize 3d plot
-figure;
-plot3(Xp_true,Yp_true,zeta_true,'o');
-xlabel('y')
-ylabel('x')
-zlabel('zeta')
-xlim([-48 48])
-ylim([-48 48])
-zlim([-20 20])
-ax = gca;
-ax.YDir = 'reverse';
-grid on
+mean_recall=mean(recall);
+mean_precision=mean(precision);
+mean_time=mean(time);
+
+dlmwrite('../../../test_output/var/result_var.csv',{N_test,nSource,mean_precision,mean_recall,mean_time},'delimiter',',','-append');
+
+
+
+%% Histogram on flux estimation 
+% opt = 1; 
+% opt = 1: plot the relative error in flux wrt histogram 
+% opt = 2: plot the estimated and true value of flux  wrt histogram
+% plot_flux_hisg(flux_total, opt)
+% save('flux_15KL-L2.mat','flux_total','nSource','Alg');

@@ -36,7 +36,7 @@ if save_pred_info
     label = fopen([save_path,'/pred_label.txt'],'w');
 end
 
-for nt = 8
+for nt = 1:100
     %% Post-processing
     gt_tmp = gt(gt(:,1)==nt,:);
     pred_tmp = pred(pred(:,1)==nt,:);
@@ -184,6 +184,5 @@ title(['img',num2str(nt)])
 % xlabel('relative error')
 % ylabel('# of pts')
 % 
-load ([mat_path,'/I',num2str(nt),'.mat'])
-imagesc(imrotate(flip(I0,2),90))
-% imagesc(imrotate(I0,90))
+% load ([mat_path,'/I',num2str(nt),'.mat'])
+% imagesc(imrotate(flip(I0,2),90))
